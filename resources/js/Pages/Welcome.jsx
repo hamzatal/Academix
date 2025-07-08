@@ -20,7 +20,8 @@ const SubscribeModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-800 p-8 rounded-xl max-w-md w-full">
                 <h2 className="text-3xl font-bold mb-4 text-center">
-                    Subscribe to <span className="text-green-500">Academix</span>
+                    Subscribe to{" "}
+                    <span className="text-green-500">Academ IX</span>
                 </h2>
                 <p className="text-gray-400 mb-6 text-center">
                     Get the latest updates, exclusive content, and special
@@ -115,11 +116,11 @@ const WelcomePage = () => {
                             <span className="text-green-500">IX</span>
                         </h1>
                         <p className="text-xl mb-8 leading-relaxed">
-                            Dive into a world of unlimited entertainment.
-                            Academix brings you the latest blockbusters,
-                            timeless classics, and exclusive originals right at
-                            your fingertips. Stream anytime, anywhere, and
-                            transform your movie-watching experience.
+                            Dive into a world of unlimited entertainment. Academ
+                            IX brings you the latest blockbusters, timeless
+                            classics, and exclusive originals right at your
+                            fingertips. Stream anytime, anywhere, and transform
+                            your movie-watching experience.
                         </p>
                         <div className="flex justify-center space-x-4">
                             {/* <button

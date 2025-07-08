@@ -5,31 +5,31 @@ import { Link } from "@inertiajs/react";
 const TeamMember = ({ name, role, program, studentId, linkedin, github }) => (
     <div className="bg-gray-800 bg-opacity-70 rounded-xl p-6 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl mx-auto mb-6">
         <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-            {name.split(' ')[0][0] + name.split(' ')[name.split(' ').length - 1][0]}
+            {name.split(" ")[0][0] +
+                name.split(" ")[name.split(" ").length - 1][0]}
         </div>
         <h3 className="text-2xl font-bold mb-2">{name}</h3>
         <div className="w-16 h-1 bg-red-500 mx-auto mb-3"></div>
         <p className="text-lg text-gray-300 mb-1 font-medium">{role}</p>
         <p className="text-base text-gray-400 mb-1">{program}</p>
         <p className="text-base text-gray-400 mb-4">ID: {studentId}</p>
-        <p className="text-gray-400 mb-4 mx-auto text-sm">
-        </p>
+        <p className="text-gray-400 mb-4 mx-auto text-sm"></p>
         <div className="flex justify-center space-x-4">
             {linkedin && (
-                <a 
-                    href={linkedin} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                <a
+                    href={linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-white hover:text-red-500 transition-colors transform hover:scale-110"
                 >
                     <Linkedin className="w-6 h-6" />
                 </a>
             )}
             {github && (
-                <a 
-                    href={github} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                <a
+                    href={github}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-white hover:text-red-500 transition-colors transform hover:scale-110"
                 >
                     <Github className="w-6 h-6" />
@@ -41,7 +41,7 @@ const TeamMember = ({ name, role, program, studentId, linkedin, github }) => (
 
 const AboutUsPage = () => {
     const movieBackground = "/images/background.jpg";
-    
+
     const teamMembers = [
         {
             name: "Saleh Qasim Hassan Al-Jarrah",
@@ -49,7 +49,7 @@ const AboutUsPage = () => {
             program: "Software Engineering",
             studentId: "202120120",
             linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/"
+            github: "https://github.com/",
         },
         {
             name: "Qusay Murad Fathi Abu Aqouleh",
@@ -57,7 +57,7 @@ const AboutUsPage = () => {
             program: "Computer Science",
             studentId: "202120221",
             linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/"
+            github: "https://github.com/",
         },
         {
             name: "Hazm Ishaq Al-Khasawneh",
@@ -65,7 +65,7 @@ const AboutUsPage = () => {
             program: "Software Engineering",
             studentId: "202120216",
             linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/"
+            github: "https://github.com/",
         },
         {
             name: "Omar Adnan Mahmoud Salman",
@@ -73,8 +73,8 @@ const AboutUsPage = () => {
             program: "Computer Science",
             studentId: "202110129",
             linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/"
-        }
+            github: "https://github.com/",
+        },
     ];
 
     return (
@@ -112,7 +112,7 @@ const AboutUsPage = () => {
                 <div className="container mx-auto px-6 py-6 flex flex-col items-center justify-center">
                     <div className="text-center max-w-4xl mb-16">
                         <h1 className="text-6xl font-extrabold mb-6 leading-tight">
-                            About AcademIX{" "}
+                            About Academ IX{" "}
                             <span className="text-red-500">IX</span>
                         </h1>
                         <p className="text-xl mb-8 leading-relaxed"></p>
@@ -126,7 +126,7 @@ const AboutUsPage = () => {
                             Meet Our <span className="text-red-500">Team</span>
                         </h2>
                         <p className="text-gray-400 text-center mb-12 text-xl">
-                            The talent behind Academix's innovation
+                            The talent behind Academ IX's innovation
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {teamMembers.map((member, index) => (

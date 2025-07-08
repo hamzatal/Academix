@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="keywords" content="AcademIX, education, learning, courses, online education">
+    <meta name="keywords" content="Academ IX, education, learning, courses, online education">
 
 
-    <title>{{ $title ?? 'AcademIX' }}</title>
+    <title>{{ $title ?? 'Academ IX' }}</title>
 
     <!-- icon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('/stamp.png') }}">

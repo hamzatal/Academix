@@ -93,7 +93,7 @@ const AdminLoginPage = () => {
                         isDarkMode ? "text-gray-300" : "text-gray-600"
                     }`}
                 >
-                    Secure administrative access for Academix. Authorized
+                    Secure administrative access for Academ IX. Authorized
                     personnel only.
                 </p>
             </div>

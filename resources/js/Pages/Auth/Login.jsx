@@ -95,7 +95,7 @@ const LoginPage = () => {
                     <p className="text-xl text-center max-w-md text-gray-300">
                         Discover the ultimate movie streaming experience. Watch
                         thousands of award-winning movies, TV shows, and more on
-                        Academix.
+                        Academ IX.
                     </p>
                 </div>
 

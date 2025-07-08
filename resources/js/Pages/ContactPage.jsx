@@ -5,21 +5,21 @@ import { Link } from "@inertiajs/react";
 const ContactPage = () => {
     const movieBackground = "/images/background.jpg";
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
     });
 
     const [status, setStatus] = useState({
         success: null,
-        message: ''
+        message: "",
     });
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -27,13 +27,13 @@ const ContactPage = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('/contacts', formData);
+            const response = await axios.post("/contacts", formData);
             setStatus({ success: true, message: response.data.message });
-            setFormData({ name: '', email: '', subject: '', message: '' });
+            setFormData({ name: "", email: "", subject: "", message: "" });
         } catch (error) {
             setStatus({
                 success: false,
-                message: error.response?.data?.message || 'An error occurred.'
+                message: error.response?.data?.message || "An error occurred.",
             });
         }
     };
@@ -78,7 +78,7 @@ const ContactPage = () => {
                         <p className="text-xl mb-8 leading-relaxed">
                             We value your feedback and are here to help! Whether
                             you have questions, suggestions, or just want to
-                            share your thoughts about AcademIX, we'd love to
+                            share your thoughts about Academ IX, we'd love to
                             hear from you. Our team is committed to providing
                             you with the best possible movie streaming
                             experience.

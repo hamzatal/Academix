@@ -30,7 +30,7 @@ const ConfirmPassword = () => {
                             isDarkMode ? "text-white" : "text-gray-900"
                         }`}
                     >
-                        Academix <span className="text-red-500">IX</span>
+                        Academ IX <span className="text-red-500">IX</span>
                     </h1>
                 </div>
                 <p

@@ -277,7 +277,7 @@ const SubscriptionConfirmationModal = ({
                 {/* Confirmation Message */}
                 <p className="text-center text-gray-300 mb-6 animate-fadeIn">
                     Your subscription is now active. Enjoy unlimited
-                    entertainment with Academix!
+                    entertainment with Academ IX!
                 </p>
 
                 {/* Continue Button */}
@@ -809,9 +809,9 @@ const SubscriptionPage = () => {
                             <span className="text-red-500">Plan</span>
                         </h1>
                         <p className="text-xl mb-8 leading-relaxed">
-                            Unlock the full potential of AcademIX. Select a plan
-                            that fits your entertainment needs and start your
-                            cinematic journey today.
+                            Unlock the full potential of Academ IX. Select a
+                            plan that fits your entertainment needs and start
+                            your cinematic journey today.
                         </p>
                     </div>
 

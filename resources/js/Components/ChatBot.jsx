@@ -32,7 +32,7 @@ const ChatBot = ({ isChatOpen, toggleChat }) => {
                 {
                     text: botMessage,
                     sender: "bot",
-                    botName: "Academix",
+                    botName: "Academ IX",
                 },
             ]);
         } catch (error) {
@@ -82,7 +82,7 @@ const ChatBot = ({ isChatOpen, toggleChat }) => {
                         <div className="flex items-center">
                             <MessageCircle className="mr-2 text-red-500" />
                             <h2 className="text-xl font-bold text-white">
-                                Academix AI ASSISTANT
+                                Academ IX AI ASSISTANT
                             </h2>
                         </div>
                     </div>
