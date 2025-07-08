@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Clapperboard, Linkedin, Github } from "lucide-react";
+import { Home, BookA, Linkedin, Github } from "lucide-react";
 import { Link } from "@inertiajs/react";
 
 const TeamMember = ({ name, role, program, studentId, linkedin, github }) => (
@@ -95,11 +95,10 @@ const AboutUsPage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
-                            Academ <span className="text-red-500">IX</span>                       
+                            Academ <span className="text-red-500">IX</span>
                         </h1>
-
                     </div>
                     <Link
                         href={route("home")}
@@ -119,7 +118,6 @@ const AboutUsPage = () => {
                         <p className="text-xl mb-8 leading-relaxed"></p>
                         <p className="text-xl mb-8 leading-relaxed"></p>
                         <p className="text-xl mb-8 leading-relaxed"></p>
-
                     </div>
 
                     {/* Team Section */}

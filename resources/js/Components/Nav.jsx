@@ -7,10 +7,10 @@ import {
     LogOut,
     User,
     Settings,
-    Clapperboard,
+    BookA,
     Mail,
     Menu,
-    X
+    X,
 } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 import LiveSearch from "./LiveSearch";
@@ -37,7 +37,7 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             href: "/home",
             icon: Home,
         },
-        
+
         {
             label: "Watch list",
             href: "/Watchlist",
@@ -56,7 +56,7 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
         {
             label: "Subscribe",
             href: "/SubscriptionPage",
-            icon: Clapperboard,
+            icon: BookA,
         },
     ];
 
@@ -172,7 +172,7 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                     whileHover={{ scale: 1.05 }}
                     className="flex items-center"
                 >
-                    <Clapperboard className="w-7 h-7 text-red-500 mr-2" />
+                    <BookA className="w-7 h-7 text-red-500 mr-2" />
                     <h1
                         className={`text-2xl font-bold tracking-tight ${
                             isDarkMode ? "text-white" : "text-gray-900"

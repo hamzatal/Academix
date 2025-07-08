@@ -11,7 +11,7 @@
     <title>{{ $title ?? 'AcademIX' }}</title>
 
     <!-- icon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('/clipboard.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('/stamp.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

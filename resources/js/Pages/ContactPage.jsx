@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Home, Clapperboard } from "lucide-react";
+import { Home, BookA } from "lucide-react";
 import { Link } from "@inertiajs/react";
 
 const ContactPage = () => {
@@ -56,7 +56,7 @@ const ContactPage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
                             Academ <span className="text-red-500">IX</span>
                         </h1>
@@ -78,9 +78,10 @@ const ContactPage = () => {
                         <p className="text-xl mb-8 leading-relaxed">
                             We value your feedback and are here to help! Whether
                             you have questions, suggestions, or just want to
-                            share your thoughts about AcademIX, we'd love to hear
-                            from you. Our team is committed to providing you
-                            with the best possible movie streaming experience.
+                            share your thoughts about AcademIX, we'd love to
+                            hear from you. Our team is committed to providing
+                            you with the best possible movie streaming
+                            experience.
                         </p>
                     </div>
 

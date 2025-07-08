@@ -8,7 +8,7 @@ import {
     Eye,
     EyeOff,
     User,
-    Clapperboard,
+    BookA,
 } from "lucide-react";
 import { Head, Link, useForm } from "@inertiajs/react";
 
@@ -163,7 +163,7 @@ export default function Register() {
                 {/* Left Side */}
                 <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-center p-12">
                     <div className="flex items-center mb-8 animate-fade-in">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1
                             className={`text-4xl font-bold ml-2 ${
                                 isDarkMode ? "text-white" : "text-gray-900"
@@ -191,7 +191,7 @@ export default function Register() {
                     >
                         {/* Mobile Logo */}
                         <div className="lg:hidden flex items-center justify-center mb-8">
-                            <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                            <BookA className="w-10 h-10 text-red-500 mr-3" />
                             <h1
                                 className={`text-3xl font-bold ml-2 ${
                                     isDarkMode ? "text-white" : "text-gray-900"

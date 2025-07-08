@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Home, Clapperboard, Film, AlertCircle, ChevronsLeft } from "lucide-react";
+import { Home, BookA, Film, AlertCircle, ChevronsLeft } from "lucide-react";
 import { Link } from "@inertiajs/react";
 
 const NotFoundPage = () => {
     const movieBackground = "/images/background.jpg";
     const [animationComplete, setAnimationComplete] = useState(false);
-    
+
     useEffect(() => {
         // Trigger animation after component mount
         const timer = setTimeout(() => {
             setAnimationComplete(true);
         }, 500);
-        
+
         return () => clearTimeout(timer);
     }, []);
 
@@ -33,7 +33,7 @@ const NotFoundPage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
                             Academ <span className="text-red-500">IX</span>
                         </h1>

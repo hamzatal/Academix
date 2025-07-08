@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import {
-    Clapperboard,
+    BookA,
     Home,
     Check,
     X,
@@ -20,11 +20,11 @@ import {
 
 // Modern Alert Component
 const ModernAlert = ({
-    type = 'info',
+    type = "info",
     message,
     isVisible,
     onClose,
-    duration = 3000
+    duration = 3000,
 }) => {
     useEffect(() => {
         let timeoutId;
@@ -40,37 +40,39 @@ const ModernAlert = ({
 
     const alertStyles = {
         info: {
-            bg: 'bg-blue-500',
+            bg: "bg-blue-500",
             icon: <Info className="w-6 h-6 text-white" />,
-            border: 'border-blue-600'
+            border: "border-blue-600",
         },
         success: {
-            bg: 'bg-green-500',
+            bg: "bg-green-500",
             icon: <Check className="w-6 h-6 text-white" />,
-            border: 'border-green-600'
+            border: "border-green-600",
         },
         warning: {
-            bg: 'bg-yellow-500',
+            bg: "bg-yellow-500",
             icon: <AlertTriangle className="w-6 h-6 text-white" />,
-            border: 'border-yellow-600'
+            border: "border-yellow-600",
         },
         error: {
-            bg: 'bg-red-500',
+            bg: "bg-red-500",
             icon: <AlertCircle className="w-6 h-6 text-white" />,
-            border: 'border-red-600'
-        }
+            border: "border-red-600",
+        },
     };
 
     const { bg, icon, border } = alertStyles[type] || alertStyles.info;
 
     return (
-        <div className={`
+        <div
+            className={`
             fixed top-4 right-4 z-[200]
             ${bg} text-white
             rounded-xl shadow-2xl
             p-4 border-l-4 ${border}
             animate-slideIn
-        `}>
+        `}
+        >
             <div className="flex items-center space-x-3">
                 <div className="mr-2">{icon}</div>
                 <div className="flex-grow">
@@ -110,13 +112,14 @@ const SuccessToast = ({ isVisible, message, onClose }) => {
 // Main Subscription App Component
 const SubscriptionApp = () => {
     const [isCardModalOpen, setIsCardModalOpen] = useState(true);
-    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+        useState(false);
     const [isToastVisible, setIsToastVisible] = useState(false);
     const [cardDetails, setCardDetails] = useState(null);
     const [alertConfig, setAlertConfig] = useState({
         isVisible: false,
-        message: '',
-        type: 'info'
+        message: "",
+        type: "info",
     });
 
     const subscriptionPlans = [
@@ -126,16 +129,16 @@ const SubscriptionApp = () => {
             features: [
                 "4K Ultra HD Streaming",
                 "Unlimited Downloads",
-                "Ad-Free Experience"
-            ]
-        }
+                "Ad-Free Experience",
+            ],
+        },
     ];
 
-    const showAlert = (message, type = 'info') => {
+    const showAlert = (message, type = "info") => {
         setAlertConfig({
             isVisible: true,
             message,
-            type
+            type,
         });
     };
 
@@ -209,14 +212,16 @@ const SubscriptionConfirmationModal = ({
     onClose,
     planTitle,
     planPrice,
-    cardDetails
+    cardDetails,
 }) => {
     if (!isOpen) return null;
 
     // Mask credit card number
     const maskedCardNumber = cardDetails.cardNumber
-        ? cardDetails.cardNumber.slice(0, 4) + ' **** **** ' + cardDetails.cardNumber.slice(-4)
-        : 'N/A';
+        ? cardDetails.cardNumber.slice(0, 4) +
+          " **** **** " +
+          cardDetails.cardNumber.slice(-4)
+        : "N/A";
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-[100] flex items-center justify-center p-4">
@@ -295,7 +300,7 @@ const CreditCardInputModal = ({
     planPrice,
     onSubmitPayment,
     ModernAlert,
-  }) => {
+}) => {
     const [cardNumber, setCardNumber] = useState("");
     const [cardName, setCardName] = useState("");
     const [expiryDate, setExpiryDate] = useState("");
@@ -306,207 +311,247 @@ const CreditCardInputModal = ({
 
     // Format card number with spaces every 4 digits
     const formatCardNumber = (value) => {
-      return value
-        .replace(/\s/g, "")
-        .replace(/(\d{4})/g, "$1 ")
-        .trim()
-        .slice(0, 19);
+        return value
+            .replace(/\s/g, "")
+            .replace(/(\d{4})/g, "$1 ")
+            .trim()
+            .slice(0, 19);
     };
 
     // Format expiry date
     const formatExpiryDate = (value) => {
-      value = value.replace(/\//g, "");
-      if (value.length >= 2) {
-        return `${value.slice(0, 2)}/${value.slice(2, 4)}`;
-      }
-      return value;
+        value = value.replace(/\//g, "");
+        if (value.length >= 2) {
+            return `${value.slice(0, 2)}/${value.slice(2, 4)}`;
+        }
+        return value;
     };
 
     const handleCardNumberChange = (e) => {
-      const formatted = formatCardNumber(e.target.value);
-      setCardNumber(formatted);
+        const formatted = formatCardNumber(e.target.value);
+        setCardNumber(formatted);
     };
 
     const handleExpiryDateChange = (e) => {
-      const formatted = formatExpiryDate(e.target.value);
-      setExpiryDate(formatted);
+        const formatted = formatExpiryDate(e.target.value);
+        setExpiryDate(formatted);
     };
 
     const handleCvvChange = (e) => {
-      setCvv(e.target.value.replace(/\D/g, ""));
+        setCvv(e.target.value.replace(/\D/g, ""));
     };
 
     // Validate inputs
     const validateForm = () => {
-      let valid = true;
-      let validationErrors = {};
+        let valid = true;
+        let validationErrors = {};
 
-      // Card number validation (16 digits)
-      const cardNumberClean = cardNumber.replace(/\s/g, "");
-      if (cardNumberClean.length !== 16) {
-        validationErrors.cardNumber = "Please enter a valid 16-digit card number.";
-        valid = false;
-      }
-
-      // Cardholder name validation
-      if (!cardName.trim()) {
-        validationErrors.cardName = "Please enter the cardholder's name.";
-        valid = false;
-      }
-
-      // Expiry date validation (MM/YY format)
-      if (expiryDate.length !== 5 || !/^\d{2}\/\d{2}$/.test(expiryDate)) {
-        validationErrors.expiryDate = "Please enter a valid expiry date (MM/YY).";
-        valid = false;
-      } else {
-        const [month, year] = expiryDate.split("/").map((item) => parseInt(item));
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear() % 100; // Get last 2 digits of the year
-        const currentMonth = currentDate.getMonth() + 1; // Months are 0-based
-
-        if (year < currentYear || (year === currentYear && month < currentMonth)) {
-          validationErrors.expiryDate = "The expiry date has already passed.";
-          valid = false;
+        // Card number validation (16 digits)
+        const cardNumberClean = cardNumber.replace(/\s/g, "");
+        if (cardNumberClean.length !== 16) {
+            validationErrors.cardNumber =
+                "Please enter a valid 16-digit card number.";
+            valid = false;
         }
-      }
 
-      // CVV validation (3 or 4 digits)
-      if (cvv.length < 3 || cvv.length > 4) {
-        validationErrors.cvv = "Please enter a valid CVV (3 or 4 digits).";
-        valid = false;
-      }
+        // Cardholder name validation
+        if (!cardName.trim()) {
+            validationErrors.cardName = "Please enter the cardholder's name.";
+            valid = false;
+        }
 
-      setErrors(validationErrors);
-      return valid;
+        // Expiry date validation (MM/YY format)
+        if (expiryDate.length !== 5 || !/^\d{2}\/\d{2}$/.test(expiryDate)) {
+            validationErrors.expiryDate =
+                "Please enter a valid expiry date (MM/YY).";
+            valid = false;
+        } else {
+            const [month, year] = expiryDate
+                .split("/")
+                .map((item) => parseInt(item));
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear() % 100; // Get last 2 digits of the year
+            const currentMonth = currentDate.getMonth() + 1; // Months are 0-based
+
+            if (
+                year < currentYear ||
+                (year === currentYear && month < currentMonth)
+            ) {
+                validationErrors.expiryDate =
+                    "The expiry date has already passed.";
+                valid = false;
+            }
+        }
+
+        // CVV validation (3 or 4 digits)
+        if (cvv.length < 3 || cvv.length > 4) {
+            validationErrors.cvv = "Please enter a valid CVV (3 or 4 digits).";
+            valid = false;
+        }
+
+        setErrors(validationErrors);
+        return valid;
     };
 
     const handleSubmit = (e) => {
-      e.preventDefault();
-      if (!validateForm()) return;
+        e.preventDefault();
+        if (!validateForm()) return;
 
-      // Submit payment if all validations pass
-      onSubmitPayment({
-        cardNumber,
-        cardName,
-        expiryDate,
-        cvv,
-      });
+        // Submit payment if all validations pass
+        onSubmitPayment({
+            cardNumber,
+            cardName,
+            expiryDate,
+            cvv,
+        });
     };
 
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-        <div className="bg-gray-800 rounded-xl p-8 w-full max-w-md mx-4 relative animate-slideIn">
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-gray-800 rounded-xl p-8 w-full max-w-md mx-4 relative animate-slideIn">
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors"
+                >
+                    <X className="w-6 h-6" />
+                </button>
 
-          {/* Card Preview */}
-          <div
-            ref={cardRef}
-            className={`mb-6 mx-auto w-80 h-48 bg-gradient-to-br from-gray-700 to-gray-900
+                {/* Card Preview */}
+                <div
+                    ref={cardRef}
+                    className={`mb-6 mx-auto w-80 h-48 bg-gradient-to-br from-gray-700 to-gray-900
               rounded-xl shadow-2xl transition-transform duration-500
               ${isFlipped ? "rotate-y-180" : ""}`}
-          >
-            {!isFlipped ? (
-              <div className="p-6 relative h-full">
-                <div className="flex justify-between items-center mb-4">
-                  <CreditCard className="w-12 h-12 text-white opacity-70" />
-                  <div className="text-right">
-                    <p className="text-sm text-gray-400">Total Monthly</p>
-                    <p className="text-xl font-bold text-red-500">${planPrice}</p>
-                  </div>
+                >
+                    {!isFlipped ? (
+                        <div className="p-6 relative h-full">
+                            <div className="flex justify-between items-center mb-4">
+                                <CreditCard className="w-12 h-12 text-white opacity-70" />
+                                <div className="text-right">
+                                    <p className="text-sm text-gray-400">
+                                        Total Monthly
+                                    </p>
+                                    <p className="text-xl font-bold text-red-500">
+                                        ${planPrice}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="mt-6">
+                                <p className="text-lg tracking-widest text-white">
+                                    {cardNumber || "#### #### #### ####"}
+                                </p>
+                            </div>
+                            <div className="flex justify-between mt-4">
+                                <p className="text-sm text-gray-300 uppercase">
+                                    {cardName || "CARD HOLDER"}
+                                </p>
+                                <p className="text-sm text-gray-300">
+                                    {expiryDate || "MM/YY"}
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="h-full flex items-center justify-center">
+                            <div className="bg-white w-full h-12 my-4"></div>
+                            <div className="absolute right-35 bg-gray-800 p-2 rounded">
+                                <p className="text-white text-sm">
+                                    {cvv || "CVV"}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
-                <div className="mt-6">
-                  <p className="text-lg tracking-widest text-white">
-                    {cardNumber || "#### #### #### ####"}
-                  </p>
-                </div>
-                <div className="flex justify-between mt-4">
-                  <p className="text-sm text-gray-300 uppercase">
-                    {cardName || "CARD HOLDER"}
-                  </p>
-                  <p className="text-sm text-gray-300">{expiryDate || "MM/YY"}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center">
-                <div className="bg-white w-full h-12 my-4"></div>
-                <div className="absolute right-35 bg-gray-800 p-2 rounded">
-                  <p className="text-white text-sm">{cvv || "CVV"}</p>
-                </div>
-              </div>
-            )}
-          </div>
-          {/* Payment Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Card Number"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
-                maxLength="19"
-                className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.cardNumber ? "border-red-500" : ""}`}
-                onFocus={() => setIsFlipped(false)}
-              />
-              {errors.cardNumber && <p className="text-red-500 text-xs">{errors.cardNumber}</p>}
-              <CreditCard className="absolute right-3 top-3 text-gray-400" />
+                {/* Payment Form */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Card Number"
+                            value={cardNumber}
+                            onChange={handleCardNumberChange}
+                            maxLength="19"
+                            className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                                errors.cardNumber ? "border-red-500" : ""
+                            }`}
+                            onFocus={() => setIsFlipped(false)}
+                        />
+                        {errors.cardNumber && (
+                            <p className="text-red-500 text-xs">
+                                {errors.cardNumber}
+                            </p>
+                        )}
+                        <CreditCard className="absolute right-3 top-3 text-gray-400" />
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            placeholder="Cardholder Name"
+                            value={cardName}
+                            onChange={(e) => setCardName(e.target.value)}
+                            className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                                errors.cardName ? "border-red-500" : ""
+                            }`}
+                            onFocus={() => setIsFlipped(false)}
+                        />
+                        {errors.cardName && (
+                            <p className="text-red-500 text-xs">
+                                {errors.cardName}
+                            </p>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="MM/YY"
+                                value={expiryDate}
+                                onChange={handleExpiryDateChange}
+                                maxLength="5"
+                                className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                                    errors.expiryDate ? "border-red-500" : ""
+                                }`}
+                                onFocus={() => setIsFlipped(false)}
+                            />
+                            {errors.expiryDate && (
+                                <p className="text-red-500 text-xs">
+                                    {errors.expiryDate}
+                                </p>
+                            )}
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="CVV"
+                                value={cvv}
+                                onChange={handleCvvChange}
+                                maxLength="4"
+                                className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                                    errors.cvv ? "border-red-500" : ""
+                                }`}
+                                onFocus={() => setIsFlipped(true)}
+                            />
+                            {errors.cvv && (
+                                <p className="text-red-500 text-xs">
+                                    {errors.cvv}
+                                </p>
+                            )}
+                            <Lock className="absolute right-3 top-3 text-gray-400" />
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-full flex items-center justify-center transform hover:scale-105 transition-transform"
+                    >
+                        <CircleDollarSign className="mr-2" /> Complete Payment
+                    </button>
+                </form>
             </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Cardholder Name"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.cardName ? "border-red-500" : ""}`}
-                onFocus={() => setIsFlipped(false)}
-              />
-              {errors.cardName && <p className="text-red-500 text-xs">{errors.cardName}</p>}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="MM/YY"
-                  value={expiryDate}
-                  onChange={handleExpiryDateChange}
-                  maxLength="5"
-                  className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.expiryDate ? "border-red-500" : ""}`}
-                  onFocus={() => setIsFlipped(false)}
-                />
-                {errors.expiryDate && <p className="text-red-500 text-xs">{errors.expiryDate}</p>}
-              </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="CVV"
-                  value={cvv}
-                  onChange={handleCvvChange}
-                  maxLength="4"
-                  className={`w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.cvv ? "border-red-500" : ""}`}
-                  onFocus={() => setIsFlipped(true)}
-                />
-                {errors.cvv && <p className="text-red-500 text-xs">{errors.cvv}</p>}
-                <Lock className="absolute right-3 top-3 text-gray-400" />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-full flex items-center justify-center transform hover:scale-105 transition-transform"
-            >
-              <CircleDollarSign className="mr-2" /> Complete Payment
-            </button>
-          </form>
         </div>
-      </div>
     );
-  };
+};
 
 // Payment Method Modal Component
 const PaymentMethodModal = ({
@@ -524,7 +569,6 @@ const PaymentMethodModal = ({
             name: "Credit Card",
             icon: <CreditCardIcon className="w-8 h-8 text-blue-500" />,
         },
-       
     ];
 
     return (
@@ -671,8 +715,7 @@ const SubscriptionPage = () => {
     };
 
     const handleSelectPayment = (paymentMethod) => {
-        
-         if (paymentMethod === "credit-card") {
+        if (paymentMethod === "credit-card") {
             // Close payment method modal and open credit card input modal
             setIsPaymentModalOpen(false);
             setIsCreditCardModalOpen(true);
@@ -704,7 +747,6 @@ const SubscriptionPage = () => {
         // Close the credit card modal
         setIsCreditCardModalOpen(false);
     };
-
 
     return (
         <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -744,7 +786,7 @@ const SubscriptionPage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
                             Academ <span className="text-red-500">IX</span>
                         </h1>

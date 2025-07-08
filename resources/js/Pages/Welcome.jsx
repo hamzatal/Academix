@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { Clapperboard, Play, Info, CircleDollarSign } from "lucide-react";
-import SubscriptionPage from './SubscriptionPage';
+import { BookA, Play, Info, CircleDollarSign } from "lucide-react";
 
 const SubscribeModal = ({ isOpen, onClose }) => {
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Basic email validation
         if (email.trim()) {
             // TODO: Implement actual subscription logic
-            console.log('Subscribed with email:', email);
+            console.log("Subscribed with email:", email);
             onClose();
         }
     };
@@ -58,14 +57,15 @@ const SubscribeModal = ({ isOpen, onClose }) => {
 };
 
 const WelcomePage = () => {
-    const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+    const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] =
+        useState(false);
     const movieBackground = "/images/background.jpg";
 
     const handlePlanSubscription = (plan) => {
         // Handle plan subscription logic
-        console.log('Selected Plan:', plan);
+        console.log("Selected Plan:", plan);
         // You might want to redirect to checkout, process payment, etc.
-        window.location.href = '/checkout'; // Example redirect
+        window.location.href = "/checkout"; // Example redirect
     };
 
     return (
@@ -86,7 +86,7 @@ const WelcomePage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
                             Academ <span className="text-red-500">IX</span>
                         </h1>
