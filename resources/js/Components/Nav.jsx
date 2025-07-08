@@ -15,7 +15,7 @@ import {
 import { Link, usePage } from "@inertiajs/react";
 import LiveSearch from "./LiveSearch";
 
-const Nav = ({ isDarkMode, wishlist, handleLogout }) => {
+const Nav = ({ isDarkMode, wishlist }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { url, props } = usePage();
@@ -66,25 +66,17 @@ const Nav = ({ isDarkMode, wishlist, handleLogout }) => {
                     isDarkMode ? "bg-gray-700" : "bg-gray-200"
                 } focus:outline-none`}
             >
-                {user?.avatar ? (
-                    <img
-                        src={user.avatar}
-                        alt="User Avatar"
-                        className="w-full h-full rounded-full object-cover"
-                    />
-                ) : (
-                    <div
-                        className={`w-full h-full rounded-full flex items-center justify-center ${
-                            isDarkMode ? "bg-gray-600" : "bg-gray-300"
+                <div
+                    className={`w-full h-full rounded-full flex items-center justify-center ${
+                        isDarkMode ? "bg-gray-600" : "bg-gray-300"
+                    }`}
+                >
+                    <User
+                        className={`w-6 h-6 ${
+                            isDarkMode ? "text-gray-300" : "text-gray-600"
                         }`}
-                    >
-                        <User
-                            className={`w-6 h-6 ${
-                                isDarkMode ? "text-gray-300" : "text-gray-600"
-                            }`}
-                        />
-                    </div>
-                )}
+                    />
+                </div>
             </motion.button>
 
             <AnimatePresence>
