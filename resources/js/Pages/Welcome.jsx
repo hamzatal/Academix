@@ -20,7 +20,7 @@ const SubscribeModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-800 p-8 rounded-xl max-w-md w-full">
                 <h2 className="text-3xl font-bold mb-4 text-center">
-                    Subscribe to <span className="text-red-500">Academix</span>
+                    Subscribe to <span className="text-green-500">Academix</span>
                 </h2>
                 <p className="text-gray-400 mb-6 text-center">
                     Get the latest updates, exclusive content, and special
@@ -38,7 +38,7 @@ const SubscribeModal = ({ isOpen, onClose }) => {
                     <div className="flex space-x-4">
                         <button
                             type="submit"
-                            className="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors"
+                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-full transition-colors"
                         >
                             Subscribe
                         </button>
@@ -86,9 +86,9 @@ const WelcomePage = () => {
                 {/* Navbar */}
                 <nav className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <BookA className="w-10 h-10 text-red-500 mr-3" />
+                        <BookA className="w-10 h-10 text-green-500 mr-3" />
                         <h1 className="text-3xl font-bold">
-                            Academ <span className="text-red-500">IX</span>
+                            Academ <span className="text-green-500">IX</span>
                         </h1>
                     </div>
                     <div className="flex items-center space-x-4">
@@ -100,7 +100,7 @@ const WelcomePage = () => {
                         </button> */}
                         <button
                             onClick={() => (window.location.href = "/login")}
-                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition-colors flex items-center"
+                            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-colors flex items-center"
                         >
                             Login <Play className="ml-2 w-5 h-5" />
                         </button>
@@ -112,7 +112,7 @@ const WelcomePage = () => {
                     <div className="text-center max-w-3xl">
                         <h1 className="text-6xl font-black mb-6 leading-tight">
                             Welcome to Academ{" "}
-                            <span className="text-red-500">IX</span>
+                            <span className="text-green-500">IX</span>
                         </h1>
                         <p className="text-xl mb-8 leading-relaxed">
                             Dive into a world of unlimited entertainment.

@@ -11,6 +11,8 @@ import {
     Mail,
     Menu,
     X,
+    LogIn,
+    UserPlus,
 } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 import LiveSearch from "./LiveSearch";
@@ -27,8 +29,8 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             }
         };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     const navItems = [
@@ -37,7 +39,6 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             href: "/home",
             icon: Home,
         },
-
         {
             label: "Watch list",
             href: "/Watchlist",
@@ -70,13 +71,13 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             label: "Logout",
             href: route("logout"),
             icon: LogOut,
-            method: "post"
-        }
+            method: "post",
+        },
     ];
 
     const isActive = (href) => url === href;
 
-    // Profile Button Component
+    // Profile Button Component - Only for authenticated users
     const ProfileButton = () => (
         <div className="relative">
             <motion.button
@@ -86,19 +87,27 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                 className={`
                     flex items-center justify-center
                     w-10 h-10 rounded-full
-                    ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}
+                    ${isDarkMode ? "bg-gray-700" : "bg-gray-200"}
                     focus:outline-none
                 `}
             >
                 {user?.avatar ? (
-                    <img 
-                        src={user.avatar} 
-                        alt="User Avatar" 
+                    <img
+                        src={user.avatar}
+                        alt="User Avatar"
                         className="w-full h-full rounded-full object-cover"
                     />
                 ) : (
-                    <div className={`w-full h-full rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-600' : 'bg-gray-300'}`}>
-                        <User className={`w-6 h-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} />
+                    <div
+                        className={`w-full h-full rounded-full flex items-center justify-center ${
+                            isDarkMode ? "bg-gray-600" : "bg-gray-300"
+                        }`}
+                    >
+                        <User
+                            className={`w-6 h-6 ${
+                                isDarkMode ? "text-gray-300" : "text-gray-600"
+                            }`}
+                        />
                     </div>
                 )}
             </motion.button>
@@ -113,7 +122,11 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                         className={`
                             absolute right-0 top-full mt-2
                             w-48 rounded-lg shadow-lg
-                            ${isDarkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white text-gray-900 border border-gray-200'}
+                            ${
+                                isDarkMode
+                                    ? "bg-gray-800 text-white border border-gray-700"
+                                    : "bg-white text-gray-900 border border-gray-200"
+                            }
                             overflow-hidden
                             z-50
                         `}
@@ -122,8 +135,8 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                method={item.method || 'get'}
-                                as={item.method ? 'button' : 'a'}
+                                method={item.method || "get"}
+                                as={item.method ? "button" : "a"}
                                 className={`
                                     flex items-center space-x-2
                                     px-4 py-3
@@ -131,9 +144,14 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                                     w-full
                                     text-left
                                     transition-colors
-                                    ${isActive(item.href) ? 
-                                        (isDarkMode ? 'bg-gray-700' : 'bg-gray-100') :
-                                        (isDarkMode ? 'hover:bg-gray-700 focus:bg-gray-700' : 'hover:bg-gray-100 focus:bg-gray-100')
+                                    ${
+                                        isActive(item.href)
+                                            ? isDarkMode
+                                                ? "bg-gray-700"
+                                                : "bg-gray-100"
+                                            : isDarkMode
+                                            ? "hover:bg-gray-700 focus:bg-gray-700"
+                                            : "hover:bg-gray-100 focus:bg-gray-100"
                                     }
                                 `}
                                 onClick={() => setIsDropdownOpen(false)}
@@ -145,6 +163,32 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                     </motion.div>
                 )}
             </AnimatePresence>
+        </div>
+    );
+
+    // Auth Buttons Component - Only for guest users
+    const AuthButtons = () => (
+        <div className="flex items-center space-x-3">
+            <Link
+                href={route("login")}
+                className={`
+                    flex items-center space-x-2
+                    px-4 py-2
+                    rounded-lg
+                    text-sm
+                    font-medium
+                    transition-all
+                    duration-300
+                    bg-red-500
+                    text-white
+                    hover:bg-red-600
+                    shadow-md
+                    hover:shadow-lg
+                `}
+            >
+                <UserPlus className="w-4 h-4" />
+                <span>Login / Sign Up</span>
+            </Link>
         </div>
     );
 
@@ -184,7 +228,7 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             </div>
 
             {/* Search Bar - Hidden on mobile, shown on tablet and up */}
-            <div className="hidden md:block w-96 max-w-md">
+            <div className="hidden md:block w-30 max-w-md">
                 <LiveSearch
                     isDarkMode={isDarkMode}
                     onSearchResults={(results) =>
@@ -239,10 +283,12 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                 ))}
             </nav>
 
-            {/* Right Section with Profile and Mobile Menu Button */}
+            {/* Right Section with Auth/Profile and Mobile Menu Button */}
             <div className="flex items-center space-x-4">
-                {/* Profile Button - Always Visible */}
-                <ProfileButton />
+                {/* Show Profile Button for authenticated users or Auth Buttons for guests */}
+                <div className="hidden lg:block">
+                    {user ? <ProfileButton /> : <AuthButtons />}
+                </div>
 
                 {/* Mobile Menu Button */}
                 <button
@@ -319,8 +365,70 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                             ))}
                         </div>
 
-                        {/* Wishlist in Mobile Menu */}
-                        {wishlist && wishlist.length > 0 && (
+                        {/* Mobile Auth/Profile Section */}
+                        <div className="px-4 mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            {user ? (
+                                <div className="space-y-2">
+                                    {dropdownItems.map((item) => (
+                                        <Link
+                                            key={item.label}
+                                            href={item.href}
+                                            method={item.method || "get"}
+                                            as={item.method ? "button" : "a"}
+                                            className={`
+                                                flex items-center space-x-2
+                                                px-3 py-2
+                                                rounded-lg
+                                                text-sm
+                                                font-medium
+                                                w-full
+                                                ${
+                                                    isActive(item.href)
+                                                        ? isDarkMode
+                                                            ? "bg-gray-800 text-white"
+                                                            : "bg-gray-100 text-black"
+                                                        : isDarkMode
+                                                        ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                                        : "text-gray-700 hover:bg-gray-100 hover:text-black"
+                                                }
+                                            `}
+                                            onClick={() =>
+                                                setIsMobileMenuOpen(false)
+                                            }
+                                        >
+                                            <item.icon className="w-5 h-5" />
+                                            <span>{item.label}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    <Link
+                                        href={route("login")}
+                                        className={`
+                                            flex items-center space-x-2
+                                            px-3 py-2
+                                            rounded-lg
+                                            text-sm
+                                            font-medium
+                                            w-full
+                                            bg-green-500
+                                            text-white
+                                            hover:bg-green-600
+                                        `}
+                                        onClick={() =>
+                                            setIsMobileMenuOpen(false)
+                                        }
+                                    >
+                                        <UserPlus className="w-5 h-5" />
+                                        <span>Login/Sign Up</span>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Wishlist in Mobile Menu - Only for authenticated users */}
+                        {user && wishlist && wishlist.length > 0 && (
                             <div className="px-4 mt-4">
                                 <Link
                                     href="/wishlist"

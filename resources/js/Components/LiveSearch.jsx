@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X } from "lucide-react"; // Import X icon for the clear button
+import { Search, X } from "lucide-react"; 
 import MoviePopup from "../Components/PopupMovie";
 import { createPortal } from "react-dom";
 
@@ -22,7 +22,6 @@ const LiveSearch = ({ onSearchResults, isDarkMode }) => {
         const query = e.target.value;
         setSearchQuery(query);
 
-        // إذا كان النص فارغًا، نعيد التهيئة ونوقف البحث
         if (query.trim().length === 0) {
             setSearchResults([]);
             onSearchResults([]);
@@ -31,11 +30,10 @@ const LiveSearch = ({ onSearchResults, isDarkMode }) => {
 
         setIsSearching(true);
 
-        // تأكد من استخدام الرابط الصحيح مع الـ API Key ودمج الاستعلام
         axios
             .get(`https://api.themoviedb.org/3/search/movie?api_key=ba4493b817fe50ef7a9d2c61203c7289&query=${query}`)
             .then((response) => {
-                const results = response.data.results || []; // تأكد أن البيانات تأتي من response.data.results
+                const results = response.data.results || [];
                 setSearchResults(results);
                 onSearchResults(results);
             })
@@ -91,9 +89,8 @@ const LiveSearch = ({ onSearchResults, isDarkMode }) => {
         }
     };
 
-    // تنسيق التقييم ليظهر كعدد عشري مكون من رقمين
     const formatRating = (rating) => {
-        return rating ? rating.toFixed(1) : "N/A"; // تحويل التقييم لرقم عشري مكون من رقم واحد بعد الفاصلة
+        return rating ? rating.toFixed(1) : "N/A"; 
     };
 
     return (
@@ -113,7 +110,7 @@ const LiveSearch = ({ onSearchResults, isDarkMode }) => {
                     type="text"
                     value={searchQuery}
                     onChange={handleSearch}
-                    placeholder="Explore movies..."
+                    placeholder="Explore Journal..."
                     className={`w-full pl-12 pr-12 py-3 rounded-full text-base font-medium tracking-tight border-0 shadow-lg transition-all duration-300 focus:ring-4 focus:outline-none ${
                         isDarkMode
                             ? "bg-gray-800 text-white placeholder-gray-500 shadow-2xl shadow-gray-900/50 focus:ring-cyan-500/30"
