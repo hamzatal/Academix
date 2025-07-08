@@ -7,10 +7,9 @@ import {
     Tag,
     Image,
     Grid,
-    BarChart2,
-    Eye,
     AlertCircle,
-    TrendingUp,
+    Eye,
+    PinIcon,
 } from "lucide-react";
 import AdminSidebar from "@/Components/AdminSidebar";
 
@@ -23,6 +22,12 @@ export default function Dashboard() {
         users: 0,
         messages: 0,
         unread_messages: 0,
+        destinations: 0,
+        offers: 0,
+        hero_sections: 0,
+        companies: 0,
+        active_companies: 0,
+        deactivated_companies: 0,
     };
     const latest_users = props.latest_users || [];
     const latest_messages = props.latest_messages || [];
@@ -33,7 +38,7 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-            <Head title="Admin Dashboard" />
+            <Head title="Admin Dashboard - Academ IX" />
 
             {/* Main Content */}
             <div className="ml-64 p-8">
@@ -42,7 +47,8 @@ export default function Dashboard() {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
+                    {/* Users Card */}
                     <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg shadow-lg p-6">
                         <div className="flex justify-between items-start">
                             <div>
@@ -63,6 +69,28 @@ export default function Dashboard() {
                         </div>
                     </div>
 
+                    {/* Destinations Card */}
+                    <div className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg shadow-lg p-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <p className="text-purple-200">Destinations</p>
+                                <h3 className="text-3xl font-bold mt-1">
+                                    {stats.destinations}
+                                </h3>
+                            </div>
+                            <div className="bg-purple-500/30 p-3 rounded-lg">
+                                <MapPin className="w-6 h-6" />
+                            </div>
+                        </div>
+                        <div className="flex items-center mt-4 text-purple-200 text-sm">
+                            <MapPin className="w-4 h-4 mr-1" />
+                            <span>
+                                {stats.destinations} destinations listed
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Messages Card */}
                     <div className="bg-gradient-to-br from-yellow-600 to-amber-700 rounded-lg shadow-lg p-6">
                         <div className="flex justify-between items-start">
                             <div>
@@ -78,6 +106,69 @@ export default function Dashboard() {
                         <div className="flex items-center mt-4 text-yellow-200 text-sm">
                             <AlertCircle className="w-4 h-4 mr-1" />
                             <span>{stats.unread_messages} unread messages</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    {/* Companies Card */}
+                    <div className="bg-gradient-to-br from-green-600 to-green-800 rounded-lg shadow-lg p-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <p className="text-green-200">
+                                    Total Companies
+                                </p>
+                                <h3 className="text-3xl font-bold mt-1">
+                                    {stats.companies}
+                                </h3>
+                            </div>
+                            <div className="bg-green-500/30 p-3 rounded-lg">
+                                <PinIcon className="w-6 h-6" />
+                            </div>
+                        </div>
+                        <div className="flex items-center mt-4 text-green-200 text-sm">
+                            <Grid className="w-4 h-4 mr-1" />
+                            <span>
+                                Active: {stats.active_companies} | Deactivated:{" "}
+                                {stats.deactivated_companies}
+                            </span>
+                        </div>
+                    </div>
+                    {/* Special Offers Card */}
+                    <div className="bg-gradient-to-br from-pink-600 to-pink-800 rounded-lg shadow-lg p-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <p className="text-pink-200">Special Offers</p>
+                                <h3 className="text-3xl font-bold mt-1">
+                                    {stats.offers}
+                                </h3>
+                            </div>
+                            <div className="bg-pink-500/30 p-3 rounded-lg">
+                                <Tag className="w-6 h-6" />
+                            </div>
+                        </div>
+                        <div className="flex items-center mt-4 text-pink-200 text-sm">
+                            <Tag className="w-4 h-4 mr-1" />
+                            <span>Active discounts available</span>
+                        </div>
+                    </div>
+
+                    {/* Hero Sections Card */}
+                    <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg shadow-lg p-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <p className="text-indigo-200">Hero Sections</p>
+                                <h3 className="text-3xl font-bold mt-1">
+                                    {stats.hero_sections}
+                                </h3>
+                            </div>
+                            <div className="bg-indigo-500/30 p-3 rounded-lg">
+                                <Image className="w-6 h-6" />
+                            </div>
+                        </div>
+                        <div className="flex items-center mt-4 text-indigo-200 text-sm">
+                            <Eye className="w-4 h-4 mr-1" />
+                            <span>Hero sections available</span>
                         </div>
                     </div>
                 </div>
@@ -168,7 +259,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className="flex items-center">
                                                 {!message.is_read && (
-                                                    <span className="bg-blue-500 w-2 h-2 rounded-full mr-2"></span>
+                                                    <span className="bg-red-500 w-2 h-2 rounded-full mr-2"></span>
                                                 )}
                                                 <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
                                                     {message.created_at

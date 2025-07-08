@@ -5,7 +5,8 @@ namespace App\Http\Controllers\AdminAuth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia; 
 
 class LoginController extends Controller
 {
@@ -16,31 +17,50 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
 
-        if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
-            $request->session()->regenerate();
+            if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) { 
+                $admin = Auth::guard('admin')->user();
+                if (method_exists($admin, 'update') && property_exists($admin, 'last_login')) { 
+                    $admin->last_login = now();
+                    $admin->save();
+                }
 
-            // Return an Inertia redirect to the admin dashboard
-            return redirect()->route('admin.dashboard');
+                $request->session()->regenerate();
+                Log::info('Admin logged in:', ['admin_id' => $admin->id]);
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
+            Log::warning('Admin login failed:', ['email' => $request->email]);
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->with('error', 'Invalid login credentials.'); 
+        } catch (\Illuminate\Validation\ValidationException $e) { 
+            Log::warning('Admin login validation failed:', ['errors' => $e->errors()]);
+            return back()->withErrors($e->errors())->withInput(); 
+        } catch (\Exception $e) {
+            Log::error('Admin login error:', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to login. Please try again later.');
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
     }
 
     public function destroy(Request $request)
     {
-        Auth::guard('admin')->logout();
+        try {
+            $adminId = Auth::guard('admin')->id(); 
+            Auth::guard('admin')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Return an Inertia redirect to the admin login page
-        return redirect()->route('admin.login');
+            Log::info('Admin logged out:', ['admin_id' => $adminId]);
+            return redirect()->route('admin.login');
+        } catch (\Exception $e) {
+            Log::error('Admin logout error:', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to logout.');
+        }
     }
 }

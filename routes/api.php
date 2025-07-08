@@ -3,19 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatBotController;
-use App\Http\Controllers\SubscriptionController;
 
 
-Route::post('/chatbot', [ChatBotController::class, 'chatbot']); // Updated to 'chatbot'
+Route::post('/chatbot', [ChatBotController::class, 'chat']);
 
 /*
 |----------------------------------------------------------------------
 | API Routes
 |----------------------------------------------------------------------
 */
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -26,6 +26,7 @@ Route::get('contacts', [ContactController::class, 'index']);
 Route::get('contacts/{contact}', [ContactController::class, 'show']);
 Route::post('contacts', [ContactController::class, 'store']);
 Route::delete('contacts/{contact}', [ContactController::class, 'destroy']);
+
 
 // Users Routes
 Route::get('users', [UserController::class, 'index']);

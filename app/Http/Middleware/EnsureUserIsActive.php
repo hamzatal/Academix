@@ -13,11 +13,9 @@ class EnsureUserIsActive
     {
         if (Auth::check() && !Auth::user()->is_active) {
             Auth::logout();
-
-            // For Inertia or Web response
-            return redirect()->route('login')->withErrors([
-                'email' => 'Your account has been deactivated.',
-            ]);
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'Your account has been deactivated. Please contact support.');
         }
 
         return $next($request);

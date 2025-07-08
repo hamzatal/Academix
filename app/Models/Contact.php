@@ -10,8 +10,8 @@ class Contact extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'email', 'subject', 'message', 'is_read'];
+
     protected $casts = [
         'is_read' => 'boolean',
-        'created_at' => 'datetime',
     ];
 }

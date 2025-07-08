@@ -1,151 +1,366 @@
 import React from "react";
-import { Home, BookA, Linkedin, Github } from "lucide-react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
+import { motion } from "framer-motion";
+import {
+    MapPin,
+    Globe,
+    Calendar,
+    Clock,
+    Users,
+    Shield,
+    Home,
+} from "lucide-react";
 
-const TeamMember = ({ name, role, program, studentId, linkedin, github }) => (
-    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-6 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl mx-auto mb-6">
-        <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-            {name.split(" ")[0][0] +
-                name.split(" ")[name.split(" ").length - 1][0]}
-        </div>
-        <h3 className="text-2xl font-bold mb-2">{name}</h3>
-        <div className="w-16 h-1 bg-red-500 mx-auto mb-3"></div>
-        <p className="text-lg text-gray-300 mb-1 font-medium">{role}</p>
-        <p className="text-base text-gray-400 mb-1">{program}</p>
-        <p className="text-base text-gray-400 mb-4">ID: {studentId}</p>
-        <p className="text-gray-400 mb-4 mx-auto text-sm"></p>
-        <div className="flex justify-center space-x-4">
-            {linkedin && (
-                <a
-                    href={linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-red-500 transition-colors transform hover:scale-110"
-                >
-                    <Linkedin className="w-6 h-6" />
-                </a>
-            )}
-            {github && (
-                <a
-                    href={github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-red-500 transition-colors transform hover:scale-110"
-                >
-                    <Github className="w-6 h-6" />
-                </a>
-            )}
-        </div>
-    </div>
-);
-
-const AboutUsPage = () => {
-    const movieBackground = "/images/background.jpg";
-
-    const teamMembers = [
-        {
-            name: "Saleh Qasim Hassan Al-Jarrah",
-            role: "Team Member",
-            program: "Software Engineering",
-            studentId: "202120120",
-            linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/",
-        },
-        {
-            name: "Qusay Murad Fathi Abu Aqouleh",
-            role: "Team Member",
-            program: "Computer Science",
-            studentId: "202120221",
-            linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/",
-        },
-        {
-            name: "Hazm Ishaq Al-Khasawneh",
-            role: "Team Member",
-            program: "Software Engineering",
-            studentId: "202120216",
-            linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/",
-        },
-        {
-            name: "Omar Adnan Mahmoud Salman",
-            role: "Team Member",
-            program: "Computer Science",
-            studentId: "202110129",
-            linkedin: "https://www.linkedin.com/",
-            github: "https://github.com/",
-        },
-    ];
+const About = ({ auth }) => {
+    // Animation variants
+    const fadeIn = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
 
     return (
-        <div className="min-h-screen bg-black text-white relative overflow-hidden">
-            {/* Background with Opacity - Keeping original size */}
-            <div
-                className="absolute inset-0 bg-cover bg-center opacity-40 z-0"
-                style={{
-                    backgroundImage: `url(${movieBackground})`,
-                }}
-            ></div>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white transition-all duration-300 relative">
+            <Head title="About Us - Academ IX" />
 
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black to-transparent opacity-80 z-0"></div>
+            {/* Home Button */}
+            <Link
+                href="/home"
+                className="fixed top-6 left-6 z-50 flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all"
+            >
+                <Home className="w-5 h-5" />
+                <span className="font-medium">Home</span>
+            </Link>
 
-            {/* Content */}
-            <div className="relative z-10">
-                {/* Navbar */}
-                <nav className="flex justify-between items-center p-6">
-                    <div className="flex items-center">
-                        <BookA className="w-10 h-10 text-red-500 mr-3" />
-                        <h1 className="text-3xl font-bold">
-                            Academ <span className="text-red-500">IX</span>
-                        </h1>
-                    </div>
-                    <Link
-                        href={route("home")}
-                        className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition-transform transform hover:scale-105 flex items-center"
-                    >
-                        Home <Home className="ml-2 w-5 h-5" />
-                    </Link>
-                </nav>
-
-                {/* About Us Content */}
-                <div className="container mx-auto px-6 py-6 flex flex-col items-center justify-center">
-                    <div className="text-center max-w-4xl mb-16">
-                        <h1 className="text-6xl font-extrabold mb-6 leading-tight">
-                            About Academ IX{" "}
-                            <span className="text-red-500">IX</span>
-                        </h1>
-                        <p className="text-xl mb-8 leading-relaxed"></p>
-                        <p className="text-xl mb-8 leading-relaxed"></p>
-                        <p className="text-xl mb-8 leading-relaxed"></p>
-                    </div>
-
-                    {/* Team Section */}
-                    <div className="w-full max-w-6xl mb-16">
-                        <h2 className="text-4xl font-bold mb-4 text-center">
-                            Meet Our <span className="text-red-500">Team</span>
-                        </h2>
-                        <p className="text-gray-400 text-center mb-12 text-xl">
-                            The talent behind Academ IX's innovation
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {teamMembers.map((member, index) => (
-                                <TeamMember
-                                    key={index}
-                                    name={member.name}
-                                    role={member.role}
-                                    program={member.program}
-                                    studentId={member.studentId}
-                                    linkedin={member.linkedin}
-                                    github={member.github}
-                                />
-                            ))}
-                        </div>
+            {/* Hero Section */}
+            <div className="relative h-64 md:h-72 overflow-hidden">
+                <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+                <div className="absolute inset-0 bg-[url('/images/world.svg')] bg-no-repeat bg-center opacity-30 bg-fill"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center px-4">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7 }}
+                            className="text-6xl font-extrabold mb-2 leading-tight"
+                        >
+                            About <span className="text-green-400">Us</span>
+                        </motion.h1>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3, duration: 0.7 }}
+                        >
+                            <div className="w-24 h-1 bg-green-500 mx-auto rounded-full"></div>
+                        </motion.div>
                     </div>
                 </div>
+            </div>
+
+            {/* Content */}
+            <div className="max-w-7xl mx-auto px-6 md:px-16 py-12">
+                {/* Introduction */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    variants={fadeIn}
+                    className="text-center max-w-4xl mx-auto mb-16"
+                >
+                    <p className="text-xl mb-8 leading-relaxed text-gray-300">
+                        At Academ IX, we're passionate about making your Academ
+                        IXdreams a reality. Our mission is to simplify trip
+                        planning, connect you with unforgettable destinations,
+                        and provide a seamless experience from start to finish.
+                    </p>
+                </motion.div>
+
+                {/* Our Story and Vision */}
+                <div className="grid md:grid-cols-2 gap-8 mb-16">
+                    {/* Our Story */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        variants={fadeIn}
+                        className="bg-gray-800 bg-opacity-70 rounded-xl p-8 shadow-2xl backdrop-blur-sm border border-gray-700 h-full"
+                    >
+                        <h2 className="text-3xl font-bold mb-6 flex items-center">
+                            <span className="bg-green-600 p-2 rounded-full mr-3">
+                                <Users className="h-6 w-6" />
+                            </span>
+                            Our{" "}
+                            <span className="text-green-500 ml-2">Story</span>
+                        </h2>
+                        <div className="space-y-4 text-gray-300 leading-relaxed">
+                            <p>
+                                Founded by a team of Academ IXenthusiasts in
+                                2020, Academ IX started with a simple idea: to
+                                create a platform that inspires and empowers
+                                travelers from all walks of life.
+                            </p>
+                            <p>
+                                Our founders, having experienced the challenges
+                                of Academ IXplanning firsthand, decided to build
+                                a solution that combines cutting-edge technology
+                                with personalized service to make Academ
+                                IXaccessible to everyone.
+                            </p>
+                            <p>
+                                Whether you're seeking a relaxing getaway or an
+                                adventurous journey, we're here to guide you
+                                every step of the way.
+                            </p>
+                        </div>
+                    </motion.div>
+
+                    {/* Our Vision */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        variants={fadeIn}
+                        className="bg-gray-800 bg-opacity-70 rounded-xl p-8 shadow-2xl backdrop-blur-sm border border-gray-700 h-full"
+                    >
+                        <h2 className="text-3xl font-bold mb-6 flex items-center">
+                            <span className="bg-green-600 p-2 rounded-full mr-3">
+                                <Globe className="h-6 w-6" />
+                            </span>
+                            Our{" "}
+                            <span className="text-green-500 ml-2">Vision</span>
+                        </h2>
+                        <div className="space-y-4 text-gray-300 leading-relaxed">
+                            <p>
+                                We envision a world where Academ IXis not just
+                                about destinations, but about transformative
+                                experiences that broaden horizons and create
+                                lasting memories.
+                            </p>
+                            <p>
+                                Academ IX aims to be the bridge connecting
+                                cultures, people, and places, fostering
+                                understanding and appreciation of our diverse
+                                world.
+                            </p>
+                            <p>
+                                By leveraging innovative technology and our deep
+                                passion for exploration, we're working to make
+                                every journey an enriching adventure that begins
+                                the moment you visit our platform.
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* Our Mission */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    variants={fadeIn}
+                    className="bg-gray-900 bg-opacity-30 rounded-xl p-8 shadow-2xl max-w-4xl mx-auto mb-16 border border-green-800"
+                >
+                    <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center">
+                        <span className="bg-green-600 p-2 rounded-full mr-3">
+                            <Shield className="h-6 w-6" />
+                        </span>
+                        Our <span className="text-green-500 ml-2">Mission</span>
+                    </h2>
+                    <div className="text-gray-200 leading-relaxed space-y-4">
+                        <p>
+                            We aim to make Academ IXaccessible, enjoyable, and
+                            stress-free for everyone. By offering personalized
+                            recommendations, secure booking options, and
+                            top-notch support, we strive to be your trusted
+                            travel companion.
+                        </p>
+                        <p>
+                            Our commitment extends beyond just facilitating
+                            bookings - we're dedicated to:
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2">
+                            <li>
+                                Promoting sustainable and responsible tourism
+                                practices
+                            </li>
+                            <li>
+                                Supporting local communities in popular
+                                destinations
+                            </li>
+                            <li>
+                                Making Academ IXinclusive and accessible to
+                                diverse audiences
+                            </li>
+                            <li>
+                                Continuously innovating to meet the evolving
+                                needs of modern travelers
+                            </li>
+                        </ul>
+                    </div>
+                </motion.div>
+
+                {/* Why Choose Us */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    variants={fadeIn}
+                    className="text-center mb-16"
+                >
+                    <h2 className="text-3xl font-bold mb-8">
+                        Why Choose{" "}
+                        <span className="text-green-500">Academ IX</span>?
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <motion.div
+                            whileHover={{
+                                y: -10,
+                                transition: { duration: 0.3 },
+                            }}
+                            className="bg-gray-800 bg-opacity-70 p-8 rounded-lg shadow-lg border border-gray-700"
+                        >
+                            <div className="bg-green-600 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                                <Globe className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-3">
+                                Global Destinations
+                            </h3>
+                            <p className="text-gray-300">
+                                Explore a world of possibilities with our
+                                extensive network of destinations across six
+                                continents and over 180 countries.
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            whileHover={{
+                                y: -10,
+                                transition: { duration: 0.3 },
+                            }}
+                            className="bg-gray-800 bg-opacity-70 p-8 rounded-lg shadow-lg border border-gray-700"
+                        >
+                            <div className="bg-green-600 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                                <Calendar className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-3">
+                                Easy Booking
+                            </h3>
+                            <p className="text-gray-300">
+                                Book flights, hotels, and experiences with just
+                                a few clicks. Our intuitive platform ensures
+                                hassle-free planning every time.
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            whileHover={{
+                                y: -10,
+                                transition: { duration: 0.3 },
+                            }}
+                            className="bg-gray-800 bg-opacity-70 p-8 rounded-lg shadow-lg border border-gray-700"
+                        >
+                            <div className="bg-green-600 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                                <Clock className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-3">
+                                24/7 Support
+                            </h3>
+                            <p className="text-gray-300">
+                                Our dedicated team is always here to assist you,
+                                day or night. Academ IXwith confidence knowing
+                                we've got your back.
+                            </p>
+                        </motion.div>
+                    </div>
+                </motion.div>
+
+                {/* Our Values */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    variants={fadeIn}
+                    className="bg-gray-800 bg-opacity-70 rounded-xl p-8 shadow-2xl max-w-4xl mx-auto mb-16 border border-gray-700"
+                >
+                    <h2 className="text-3xl font-bold mb-6 text-center">
+                        Our <span className="text-green-500">Values</span>
+                    </h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {[
+                            {
+                                title: "Innovation",
+                                description:
+                                    "We embrace new technologies and ideas to continuously improve our service.",
+                            },
+                            {
+                                title: "Integrity",
+                                description:
+                                    "We operate with transparency and hoy in all our interactions.",
+                            },
+                            {
+                                title: "Inclusivity",
+                                description:
+                                    "We believe Academ IXshould be accessible to everyone, regardless of background.",
+                            },
+                            {
+                                title: "Sustainability",
+                                description:
+                                    "We promote responsible Academ IXpractices that respect our planet.",
+                            },
+                        ].map((value, index) => (
+                            <div key={index} className="flex items-start p-4">
+                                <div className="bg-green-600 p-2 rounded-full mr-4 mt-1">
+                                    <Shield className="h-4 w-4" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-green-400">
+                                        {value.title}
+                                    </h3>
+                                    <p className="text-gray-300">
+                                        {value.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+
+                {/* Call to Action */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    variants={fadeIn}
+                    className="text-center bg-green-900 bg-opacity-40 rounded-xl p-8 shadow-xl max-w-3xl mx-auto border border-green-800"
+                >
+                    <h2 className="text-2xl font-bold mb-4">
+                        Ready to Explore with{" "}
+                        <span className="text-green-400">Academ IX</span>?
+                    </h2>
+                    <p className="text-gray-300 mb-6">
+                        Join thousands of satisfied travelers who have
+                        discovered their perfect destinations with us.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <motion.a
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            href="/register"
+                            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-all duration-300"
+                        >
+                            Sign Up Today
+                        </motion.a>
+                    </div>
+                </motion.div>
             </div>
         </div>
     );
 };
 
-export default AboutUsPage;
+export default About;

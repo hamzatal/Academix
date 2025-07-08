@@ -1,27 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Home,
+    Hotel,
+    Plane,
     BookOpen,
     Bookmark,
     LogOut,
     User,
-    BookA,
+    Map,
     Mail,
     Menu,
     X,
-    LogIn,
+    Search,
+    PlaneIcon,
+    PackageCheck,
+    LayoutDashboard,
+    Building2,
 } from "lucide-react";
-import { Link, usePage } from "@inertiajs/react";
-import LiveSearch from "./LiveSearch";
+import { Link, usePage, router } from "@inertiajs/react";
+import axios from "axios";
+axios.defaults.baseURL = window.location.origin;
 
-const Nav = ({ isDarkMode, wishlist }) => {
+const Nav = ({ isDarkMode = true, wishlist = [] }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
     const { url, props } = usePage();
-    const user = props.auth?.user; // Access user from props.auth.user
+    const { auth } = props;
+    const searchRef = useRef(null);
+    const profileRef = useRef(null);
 
-    // Handle window resize to close mobile menu on large screens
+    // Handle scroll effect
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Close mobile menu on resize
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
@@ -32,17 +54,125 @@ const Nav = ({ isDarkMode, wishlist }) => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Navigation items
+    // Close search bar and results when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                searchRef.current &&
+                !searchRef.current.contains(event.target) &&
+                isSearchOpen
+            ) {
+                setIsSearchOpen(false);
+                setSearchResults([]);
+                setSearchQuery("");
+            }
+
+            if (
+                profileRef.current &&
+                !profileRef.current.contains(event.target) &&
+                isDropdownOpen
+            ) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isSearchOpen, isDropdownOpen]);
+
+    // Real-time search
+    useEffect(() => {
+        if (!searchQuery.trim()) {
+            setSearchResults([]);
+            setIsSearching(false);
+            return;
+        }
+
+        setIsSearching(true);
+        const delayDebounceFn = setTimeout(() => {
+            axios
+                .get(`/search/live?q=${encodeURIComponent(searchQuery)}`)
+                .then((response) => {
+                    setSearchResults(response.data.results || []);
+                })
+                .catch((error) => {
+                    setSearchResults([]);
+                })
+                .finally(() => {
+                    setIsSearching(false);
+                });
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery]);
+
+    // Handle clear search
+    const handleClearSearch = () => {
+        setSearchQuery("");
+        setSearchResults([]);
+        setIsSearchOpen(false);
+    };
+
+    // Handle result selection
+    const getItemUrl = (item) => {
+        switch (item.type) {
+            case "destination":
+                return `/destinations/${item.id}`;
+            case "package":
+                return `/packages/${item.id}`;
+            case "offer":
+                return `/offers/${item.id}`;
+            default:
+                return "#";
+        }
+    };
+
+    const handleResultSelect = (item) => {
+        router.visit(getItemUrl(item));
+        setIsSearchOpen(false);
+        setSearchQuery("");
+        setSearchResults([]);
+    };
+
+    // Handle search form submission
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.visit(`/search?q=${encodeURIComponent(searchQuery)}`);
+            setIsSearchOpen(false);
+            setSearchResults([]);
+            setSearchQuery("");
+        }
+    };
+
+    // Format price
+    const formatPrice = (price, discountPrice) => {
+        if (discountPrice) {
+            return `$${parseFloat(discountPrice).toFixed(2)} (was $${parseFloat(
+                price
+            ).toFixed(2)})`;
+        }
+        return `$${parseFloat(price).toFixed(2)}`;
+    };
+
     const navItems = [
-        { label: "Home", href: "/home", icon: Home },
-        { label: "Watch list", href: "/Watchlist", icon: Bookmark },
+        { label: "Home", href: "/home", icon: Hotel },
+        { label: "Packages", href: "/packages", icon: PackageCheck },
+        { label: "Destinations", href: "/destinations", icon: Map },
+        { label: "Offers", href: "/offers", icon: Bookmark },
         { label: "About Us", href: "/about-us", icon: BookOpen },
-        { label: "Contact Us", href: "/ContactPage", icon: Mail },
-        { label: "Subscribe", href: "/SubscriptionPage", icon: BookA },
+        { label: "Contact", href: "/ContactPage", icon: Mail },
     ];
 
-    // Dropdown items for authenticated users
-    const dropdownItems = [
+    const userDropdownItems = [
+        {
+            label: "My Bookings",
+            href: "/UserBookings",
+            icon: Plane,
+            method: "get",
+        },
         { label: "Profile", href: "/UserProfile", icon: User },
         {
             label: "Logout",
@@ -52,290 +182,574 @@ const Nav = ({ isDarkMode, wishlist }) => {
         },
     ];
 
-    // Check if the current URL is active
+    const companyDropdownItems = [
+        {
+            label: "Dashboard",
+            href: route("company.dashboard"),
+            icon: LayoutDashboard,
+            method: "get",
+        },
+        {
+            label: "Company Profile",
+            href: route("company.profile"),
+            icon: Building2,
+        },
+        {
+            label: "Logout",
+            href: route("company.logout"),
+            icon: LogOut,
+            method: "post",
+        },
+    ];
+
     const isActive = (href) => url === href;
 
-    // Profile Button Component - For authenticated users
-    const ProfileButton = () => (
-        <div className="relative">
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                    isDarkMode ? "bg-gray-700" : "bg-gray-200"
-                } focus:outline-none`}
-            >
-                <div
-                    className={`w-full h-full rounded-full flex items-center justify-center ${
-                        isDarkMode ? "bg-gray-600" : "bg-gray-300"
-                    }`}
+    // Toggle dropdown function
+    const toggleDropdown = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    // Profile Button Component
+    const ProfileButton = () => {
+        if (!auth || (!auth.user && !auth.company)) {
+            return null; // Don't render if auth is null or no user/company is authenticated
+        }
+
+        // Check if auth.user contains company-specific fields
+        const isCompanyUser =
+            auth.user && (auth.user.company_name || auth.user.license_number);
+        const effectiveUser = isCompanyUser ? null : auth.user;
+        const effectiveCompany = isCompanyUser ? auth.user : auth.company;
+
+        const displayAvatar = effectiveUser?.avatar_url
+            ? effectiveUser.avatar_url
+            : "/images/avatar.webp";
+
+        return (
+            <div className="relative" ref={profileRef}>
+                <button
+                    onClick={toggleDropdown}
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-green-600/20 focus:outline-none border-2 border-green-500 hover:bg-green-600/30 transition-colors"
                 >
-                    <User
-                        className={`w-6 h-6 ${
-                            isDarkMode ? "text-gray-300" : "text-gray-600"
-                        }`}
-                    />
-                </div>
-            </motion.button>
+                    {effectiveUser && effectiveUser.avatar_url ? (
+                        <img
+                            src={displayAvatar}
+                            alt="User Avatar"
+                            className="w-full h-full rounded-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full rounded-full flex items-center justify-center">
+                            {effectiveCompany ? (
+                                <Building2 className="w-6 h-6 text-white" />
+                            ) : (
+                                <User className="w-6 h-6 text-white" />
+                            )}
+                        </div>
+                    )}
+                </button>
 
-            <AnimatePresence>
-                {isDropdownOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg ${
-                            isDarkMode
-                                ? "bg-gray-800 text-white border border-gray-700"
-                                : "bg-white text-gray-900 border border-gray-200"
-                        } overflow-hidden z-50`}
-                    >
-                        {dropdownItems.map((item) => (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                method={item.method || "get"}
-                                as={item.method ? "button" : "a"}
-                                className={`flex items-center space-x-2 px-4 py-3 text-sm w-full text-left transition-colors ${
-                                    isActive(item.href)
-                                        ? isDarkMode
-                                            ? "bg-gray-700"
-                                            : "bg-gray-100"
-                                        : isDarkMode
-                                        ? "hover:bg-gray-700 focus:bg-gray-700"
-                                        : "hover:bg-gray-100 focus:bg-gray-100"
-                                }`}
-                                onClick={() => setIsDropdownOpen(false)}
-                            >
-                                <item.icon className="w-5 h-5 mr-2" />
-                                {item.label}
-                            </Link>
-                        ))}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
+                <AnimatePresence>
+                    {isDropdownOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg bg-black/80 backdrop-blur-lg text-white border border-green-500/30 overflow-hidden z-60"
+                        >
+                            {(effectiveUser
+                                ? userDropdownItems
+                                : companyDropdownItems
+                            ).map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    method={item.method || "get"}
+                                    as={item.method ? "button" : "a"}
+                                    className={`flex items-center px-4 py-3 text-sm w-full text-left transition-colors ${
+                                        isActive(item.href)
+                                            ? "bg-green-600/30"
+                                            : "hover:bg-green-600/20 focus:bg-green-600/20"
+                                    }`}
+                                    onClick={() => setIsDropdownOpen(false)}
+                                >
+                                    <item.icon className="w-5 h-5 mr-2" />
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    };
+    // Add custom CSS for scrollbar and separator
+    useEffect(() => {
+        const style = document.createElement("style");
+        style.textContent = `
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: rgba(16, 185, 129, 0.05);
+                border-radius: 10px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(16, 185, 129, 0.3);
+                border-radius: 10px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(16, 185, 129, 0.5);
+            }
+        `;
+        document.head.appendChild(style);
 
-    // Auth Button Component - For guest users (Single Login/Sign Up button)
-    const AuthButton = () => (
-        <div className="flex items-center">
-            <Link
-                href={route("login")}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 bg-green-500 text-white hover:bg-green-600 shadow-md hover:shadow-lg`}
-            >
-                <LogIn className="w-4 h-4" />
-                <span>Login / Sign Up</span>
-            </Link>
-        </div>
-    );
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
 
     return (
-        <motion.header
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, type: "spring", stiffness: 400 }}
-            className={`fixed top-0 left-0 right-0 z-20 px-4 md:px-10 py-3 flex justify-between items-center ${
-                isDarkMode
-                    ? "bg-gray-900/30 text-white"
-                    : "bg-white/30 text-gray-900"
-            } backdrop-blur-xl border-b ${
-                isDarkMode ? "border-gray-800/50" : "border-gray-200/50"
-            }`}
+        <header
+            className={`
+                fixed top-0 left-0 right-0 z-20
+                px-6 md:px-10 py-4
+                flex justify-between items-center
+                transition-all duration-200
+                ${
+                    isScrolled
+                        ? "bg-black/80 backdrop-blur-lg"
+                        : "bg-transparent"
+                }
+                border-b border-green-500/20
+            `}
         >
             {/* Logo */}
-            <div className="flex items-center space-x-4">
-                <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="flex items-center"
-                >
-                    <BookA className="w-7 h-7 text-green-500 mr-2" />
-                    <h1
-                        className={`text-2xl font-bold tracking-tight ${
-                            isDarkMode ? "text-white" : "text-gray-900"
-                        }`}
-                    >
-                        Academ<span className="text-green-500"> IX</span>
-                    </h1>
-                </motion.div>
-            </div>
-
-            {/* Search Bar - Hidden on mobile, shown on tablet and up */}
-            <div className="hidden md:block w-30 max-w-md">
-                <LiveSearch
-                    isDarkMode={isDarkMode}
-                    onSearchResults={(results) =>
-                        console.log("Search results:", results)
-                    }
-                />
+            <div className="flex items-center">
+                <PlaneIcon className="w-10 h-10 text-green-500 mr-3" />
+                <h1 className="text-3xl font-bold text-white">
+                    Academ IX<span className="text-green-500"></span>
+                </h1>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-6">
-                {navItems.map((item) => (
-                    <Link
-                        key={item.label}
-                        href={item.href}
-                        className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 group ${
-                            isActive(item.href)
-                                ? isDarkMode
-                                    ? "bg-gray-800 text-white"
-                                    : "bg-gray-100 text-black"
-                                : isDarkMode
-                                ? "text-gray-300 hover:bg-gray-800 hover:text-white"
-                                : "text-gray-700 hover:bg-gray-100 hover:text-black"
-                        }`}
-                    >
-                        <item.icon
-                            className={`w-5 h-5 transition-transform group-hover:scale-110 ${
-                                isActive(item.href)
-                                    ? isDarkMode
-                                        ? "text-white"
-                                        : "text-black"
-                                    : isDarkMode
-                                    ? "text-gray-400"
-                                    : "text-gray-600"
-                            }`}
-                        />
-                        <span>{item.label}</span>
-                    </Link>
-                ))}
+            <nav className="hidden lg:flex items-center ml-4">
+                <div className="flex items-center space-x-2">
+                    {navItems.map((item, index) => (
+                        <React.Fragment key={item.label}>
+                            <Link
+                                href={item.href}
+                                className={`
+                                    flex items-center space-x-2
+                                    px-3 py-2
+                                    rounded-full
+                                    text-sm
+                                    font-medium
+                                    transition-all
+                                    duration-200
+                                    ${
+                                        isActive(item.href)
+                                            ? "bg-green-600 text-white"
+                                            : "text-gray-300 hover:bg-green-600/20 hover:text-white"
+                                    }
+                                `}
+                            >
+                                <item.icon className="w-5 h-5" />
+                                <span>{item.label}</span>
+                            </Link>
+                            {index < navItems.length - 1 && (
+                                <div className="h-6 w-px bg-green-500/30" />
+                            )}
+                        </React.Fragment>
+                    ))}
+                </div>
             </nav>
 
-            {/* Right Section with Auth/Profile and Mobile Menu Button */}
+            {/* Right Section with Search, Profile and Mobile Menu Button */}
             <div className="flex items-center space-x-4">
-                <div className="hidden lg:block">
-                    {user ? <ProfileButton /> : <AuthButton />}
+                {/* Desktop Search */}
+                <div className="hidden md:block relative" ref={searchRef}>
+                    <button
+                        onClick={() => setIsSearchOpen(!isSearchOpen)}
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-green-600/20 focus:outline-none border border-green-500/30 hover:bg-green-600/30 transition-colors"
+                    >
+                        <Search className="w-5 h-5 text-white" />
+                    </button>
+
+                    <AnimatePresence>
+                        {isSearchOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute top-full mt-2 right-0 w-96 bg-black/90 backdrop-blur-lg rounded-xl shadow-lg border border-green-500/30 z-50 overflow-hidden"
+                            >
+                                <form onSubmit={handleSearchSubmit}>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <Search className="w-5 h-5 text-gray-400 group-focus-within:text-green-400" />
+                                        </div>
+                                        <motion.input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) =>
+                                                setSearchQuery(e.target.value)
+                                            }
+                                            placeholder="Search deals, destinations..."
+                                            className="w-full pl-12 pr-12 py-3 bg-green-600/10 border-b border-green-500/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 rounded-t-xl"
+                                            autoFocus
+                                        />
+                                        {searchQuery && (
+                                            <motion.button
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                onClick={handleClearSearch}
+                                                className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-green-400"
+                                                type="button"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </motion.button>
+                                        )}
+                                    </div>
+                                </form>
+
+                                {/* Search Results Dropdown */}
+                                <AnimatePresence>
+                                    {searchQuery && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{
+                                                opacity: 1,
+                                                height: searchQuery
+                                                    ? "auto"
+                                                    : 0,
+                                            }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{
+                                                type: "tween",
+                                                duration: 0.2,
+                                            }}
+                                            className="w-full bg-green-600/10 custom-scrollbar"
+                                            style={{
+                                                maxHeight: "18rem",
+                                                overflowY: "auto",
+                                            }}
+                                        >
+                                            {isSearching ? (
+                                                <div className="px-4 py-3 text-center border-t border-green-500/20">
+                                                    <div className="animate-pulse text-sm text-gray-400">
+                                                        Searching...
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    {searchResults.length ===
+                                                    0 ? (
+                                                        <div className="px-4 py-3 text-center border-t border-green-500/20">
+                                                            <p className="text-sm font-medium text-gray-400">
+                                                                No results found
+                                                            </p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="divide-y divide-green-500/20">
+                                                            {searchResults.map(
+                                                                (item) => (
+                                                                    <motion.div
+                                                                        key={`${item.type}-${item.id}`}
+                                                                        whileHover={{
+                                                                            backgroundColor:
+                                                                                "rgba(16, 185, 129, 0.2)",
+                                                                        }}
+                                                                        whileTap={{
+                                                                            scale: 0.98,
+                                                                        }}
+                                                                        onClick={() =>
+                                                                            handleResultSelect(
+                                                                                item
+                                                                            )
+                                                                        }
+                                                                        className="px-4 py-3 cursor-pointer flex items-center space-x-4 transition-colors duration-200"
+                                                                    >
+                                                                        <img
+                                                                            src={
+                                                                                item.image ||
+                                                                                "https://via.placeholder.com/56x84"
+                                                                            }
+                                                                            alt={
+                                                                                item.title
+                                                                            }
+                                                                            className="w-14 h-20 object-cover rounded-lg border border-green-500/30"
+                                                                        />
+                                                                        <div className="flex-1">
+                                                                            <h3 className="text-base font-semibold text-white truncate">
+                                                                                {
+                                                                                    item.title
+                                                                                }
+                                                                                <span className="text-xs text-gray-400 ml-1">
+                                                                                    (
+                                                                                    {item.type
+                                                                                        .charAt(
+                                                                                            0
+                                                                                        )
+                                                                                        .toUpperCase() +
+                                                                                        item.type.slice(
+                                                                                            1
+                                                                                        )}
+
+                                                                                    )
+                                                                                </span>
+                                                                            </h3>
+                                                                            <p className="text-sm text-gray-400 truncate">
+                                                                                {formatPrice(
+                                                                                    item.price,
+                                                                                    item.discount_price
+                                                                                )}
+                                                                            </p>
+                                                                        </div>
+                                                                    </motion.div>
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
+
+                {/* Book Now Button */}
+                <Link
+                    href="/booking"
+                    className="hidden md:flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full transition-colors"
+                >
+                    Book Now <Plane className="ml-2 w-5 h-5" />
+                </Link>
+
+                {/* Profile Button */}
+                <ProfileButton />
+
+                {/* Mobile Menu Button */}
                 <button
-                    className="lg:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                    className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-green-600/20 border border-green-500/30 hover:bg-green-600/30 transition-colors"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                     {isMobileMenuOpen ? (
-                        <X className="w-6 h-6" />
+                        <X className="w-6 h-6 text-white" />
                     ) : (
-                        <Menu className="w-6 h-6" />
+                        <Menu className="w-6 h-6 text-white" />
                     )}
                 </button>
             </div>
 
             {/* Mobile Navigation */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className={`lg:hidden absolute top-full left-0 right-0 ${
-                            isDarkMode ? "bg-gray-900/95" : "bg-white/95"
-                        } backdrop-blur-lg border-b ${
-                            isDarkMode ? "border-gray-800" : "border-gray-200"
-                        } py-4`}
-                    >
-                        {/* Mobile Search */}
-                        <div className="px-4 mb-4">
-                            <LiveSearch
-                                isDarkMode={isDarkMode}
-                                onSearchResults={(results) =>
-                                    console.log("Search results:", results)
-                                }
-                            />
-                        </div>
-
-                        {/* Mobile Nav Items */}
-                        <div className="space-y-2 px-4">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.label}
-                                    href={item.href}
-                                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full ${
-                                        isActive(item.href)
-                                            ? isDarkMode
-                                                ? "bg-gray-800 text-white"
-                                                : "bg-gray-100 text-black"
-                                            : isDarkMode
-                                            ? "text-gray-300 hover:bg-gray-800 hover:text-white"
-                                            : "text-gray-700 hover:bg-gray-100 hover:text-black"
-                                    }`}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <item.icon className="w-5 h-5" />
-                                    <span>{item.label}</span>
-                                </Link>
-                            ))}
-                        </div>
-
-                        {/* Mobile Auth/Profile Section */}
-                        <div className="px-4 mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-                            {user ? (
-                                <div className="space-y-2">
-                                    {dropdownItems.map((item) => (
-                                        <Link
-                                            key={item.label}
-                                            href={item.href}
-                                            method={item.method || "get"}
-                                            as={item.method ? "button" : "a"}
-                                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full ${
-                                                isActive(item.href)
-                                                    ? isDarkMode
-                                                        ? "bg-gray-800 text-white"
-                                                        : "bg-gray-100 text-black"
-                                                    : isDarkMode
-                                                    ? "text-gray-300 hover:bg-gray-800 hover:text-white"
-                                                    : "text-gray-700 hover:bg-gray-100 hover:text-black"
-                                            }`}
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                        >
-                                            <item.icon className="w-5 h-5" />
-                                            <span>{item.label}</span>
-                                        </Link>
-                                    ))}
+            {isMobileMenuOpen && (
+                <div className="lg:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-lg border-b border-green-500/30 py-4">
+                    {/* Mobile Search */}
+                    <div className="px-6 mb-4 relative" ref={searchRef}>
+                        <form onSubmit={handleSearchSubmit}>
+                            <div className="relative overflow-hidden rounded-xl">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <Search className="w-5 h-5 text-gray-400 group-focus-within:text-green-400" />
                                 </div>
-                            ) : (
-                                <div className="space-y-2">
-                                    <Link
-                                        href={route("login")}
-                                        className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full bg-green-500 text-white hover:bg-green-600`}
-                                        onClick={() =>
-                                            setIsMobileMenuOpen(false)
-                                        }
+                                <motion.input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) =>
+                                        setSearchQuery(e.target.value)
+                                    }
+                                    placeholder="Search offers, destinations..."
+                                    className="w-full pl-12 pr-12 py-3 bg-green-600/10 border-b border-green-500/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 rounded-t-xl"
+                                />
+                                {searchQuery && (
+                                    <motion.button
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        onClick={handleClearSearch}
+                                        className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-green-400"
+                                        type="button"
                                     >
-                                        <LogIn className="w-5 h-5" />
-                                        <span>Login / Sign Up</span>
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Wishlist in Mobile Menu - Only for authenticated users */}
-                        {user && wishlist && wishlist.length > 0 && (
-                            <div className="px-4 mt-4">
-                                <Link
-                                    href="/wishlist"
-                                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full ${
-                                        isActive("/wishlist")
-                                            ? isDarkMode
-                                                ? "bg-gray-800 text-white"
-                                                : "bg-gray-100 text-black"
-                                            : isDarkMode
-                                            ? "text-gray-300 hover:bg-gray-800 hover:text-white"
-                                            : "text-gray-700 hover:bg-gray-100 hover:text-black"
-                                    }`}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <Bookmark className="w-5 h-5" />
-                                    <span>Wishlist ({wishlist.length})</span>
-                                </Link>
+                                        <X className="w-5 h-5" />
+                                    </motion.button>
+                                )}
                             </div>
+
+                            {/* Mobile Search Results */}
+                            <AnimatePresence>
+                                {searchQuery && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{
+                                            opacity: 1,
+                                            height: searchQuery ? "auto" : 0,
+                                        }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{
+                                            type: "tween",
+                                            duration: 0.2,
+                                        }}
+                                        className="w-full bg-green-600/10 custom-scrollbar rounded-b-xl"
+                                        style={{
+                                            maxHeight: "18rem",
+                                            overflowY: "auto",
+                                        }}
+                                    >
+                                        {isSearching ? (
+                                            <div className="px-4 py-3 text-center border-t border-green-500/20">
+                                                <div className="animate-pulse text-sm text-gray-400">
+                                                    Searching...
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {searchResults.length === 0 ? (
+                                                    <div className="px-4 py-3 text-center border-t border-green-500/20">
+                                                        <p className="text-sm font-medium text-gray-400">
+                                                            No results found
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="divide-y divide-green-500/20">
+                                                        {searchResults.map(
+                                                            (item) => (
+                                                                <motion.div
+                                                                    key={`${item.type}-${item.id}`}
+                                                                    whileHover={{
+                                                                        backgroundColor:
+                                                                            "rgba(16, 185, 129, 0.2)",
+                                                                    }}
+                                                                    whileTap={{
+                                                                        scale: 0.98,
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        handleResultSelect(
+                                                                            item
+                                                                        )
+                                                                    }
+                                                                    className="px-4 py-3 cursor-pointer flex items-center space-x-4 transition-colors duration-200"
+                                                                >
+                                                                    <img
+                                                                        src={
+                                                                            item.image ||
+                                                                            "https://via.placeholder.com/56x84"
+                                                                        }
+                                                                        alt={
+                                                                            item.title
+                                                                        }
+                                                                        className="w-14 h-20 object-cover rounded-lg border border-green-500/30"
+                                                                    />
+                                                                    <div className="flex-1">
+                                                                        <h3 className="text-base font-semibold text-white truncate">
+                                                                            {
+                                                                                item.title
+                                                                            }
+                                                                            <span className="text-xs text-gray-400 ml-1">
+                                                                                (
+                                                                                {item.type
+                                                                                    .charAt(
+                                                                                        0
+                                                                                    )
+                                                                                    .toUpperCase() +
+                                                                                    item.type.slice(
+                                                                                        1
+                                                                                    )}
+
+                                                                                )
+                                                                            </span>
+                                                                        </h3>
+                                                                        <p className="text-sm text-gray-400 truncate">
+                                                                            {formatPrice(
+                                                                                item.price,
+                                                                                item.discount_price
+                                                                            )}
+                                                                        </p>
+                                                                    </div>
+                                                                </motion.div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </form>
+                    </div>
+
+                    {/* Mobile Nav Items */}
+                    <div className="space-y-2 px-6">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={`
+                                    flex items-center
+                                    px-4 py-3
+                                    rounded-lg
+                                    text-sm
+                                    font-medium
+                                    w-full
+                                    transition-colors duration-200
+                                    ${
+                                        isActive(item.href)
+                                            ? "bg-green-600 text-white"
+                                            : "text-gray-300 hover:bg-green-600/20 hover:text-white"
+                                    }
+                                `}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                <item.icon className="w-5 h-5 mr-2" />
+                                <span>{item.label}</span>
+                            </Link>
+                        ))}
+                        {auth?.company && (
+                            <Link
+                                href={route("company.dashboard")}
+                                className={`
+                                    flex items-center
+                                    px-4 py-3
+                                    rounded-lg
+                                    text-sm
+                                    font-medium
+                                    w-full
+                                    transition-colors duration-200
+                                    ${
+                                        isActive(route("company.dashboard"))
+                                            ? "bg-green-600 text-white"
+                                            : "text-gray-300 hover:bg-green-600/20 hover:text-white"
+                                    }
+                                `}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                <LayoutDashboard className="w-5 h-5 mr-2" />
+                                <span>Dashboard</span>
+                            </Link>
                         )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.header>
+                    </div>
+
+                    {/* Book Now Button on Mobile */}
+                    <div className="px-6 mt-4">
+                        <Link
+                            href="/booking"
+                            className="flex items-center justify-center w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            Book Now <Plane className="ml-2 w-5 h-5" />
+                        </Link>
+                    </div>
+                </div>
+            )}
+        </header>
     );
 };
 

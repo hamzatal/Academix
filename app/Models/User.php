@@ -22,18 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_active',
         'deactivated_at',
         'deactivation_reason',
-        'last_login',
     ];
-
-    /**
-     * Check if the user account is active.
-     *
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->is_active;
-    }
 
     protected $hidden = [
         'password',
@@ -42,10 +31,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'last_login' => 'datetime',
         'deactivated_at' => 'datetime',
-        'birthday' => 'date',
         'is_active' => 'boolean',
     ];
 
+    public function bookings()
+    {
+        return $this->hasMany(Checkout::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

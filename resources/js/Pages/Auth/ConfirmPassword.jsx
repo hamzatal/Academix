@@ -1,163 +1,175 @@
-import React, { useState } from "react";
-import { SunMedium, Moon, Film, Lock, BookA } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lock, Home, LogIn, PhoneCall } from "lucide-react";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 const ConfirmPassword = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [notification, setNotification] = useState(null);
 
-    const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+        setError,
+        clearErrors,
+    } = useForm({
+        password: "",
+    });
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        return () => reset("password");
+    }, []);
+
+    const validate = () => {
+        const newErrors = {};
+        if (!data.password) newErrors.password = "Password is required";
+        else if (data.password.length < 8)
+            newErrors.password = "Password must be at least 8 characters";
+        else if (data.password.length > 50)
+            newErrors.password = "Password cannot exceed 50 characters";
+        return newErrors;
+    };
+
+    const submit = (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
-        // Handle password confirmation logic here
+        clearErrors();
+        const validationErrors = validate();
+
+        if (Object.keys(validationErrors).length > 0) {
+            Object.entries(validationErrors).forEach(([key, message]) =>
+                setError(key, message)
+            );
+            setNotification({
+                type: "error",
+                message: "Please enter a valid password.",
+            });
+            setTimeout(() => setNotification(null), 3000);
+            return;
+        }
+
+        post(route("password.confirm"), {
+            onSuccess: () => {
+                setNotification({
+                    type: "success",
+                    message: "Password confirmed successfully!",
+                });
+                setTimeout(() => setNotification(null), 3000);
+            },
+            onError: () => {
+                setNotification({
+                    type: "error",
+                    message: "Failed to confirm password. Please try again.",
+                });
+                setTimeout(() => setNotification(null), 3000);
+            },
+            onFinish: () => reset("password"),
+        });
     };
 
     return (
         <div
-            className={`min-h-screen flex transition-colors duration-300 ${
-                isDarkMode ? "bg-gray-900" : "bg-gray-50"
-            }`}
+            className="min-h-screen flex bg-cover bg-center bg-no-repeat relative"
+            style={{ backgroundImage: "url('/images/world.svg')" }}
         >
-            {/* Left Side */}
-            <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-center p-12">
-                <div className="flex items-center mb-8 animate-fade-in">
-                    <BookA className="w-10 h-10 text-red-500 mr-3" />
-                    <h1
-                        className={`text-4xl font-bold ml-2 ${
-                            isDarkMode ? "text-white" : "text-gray-900"
+            <Head title="Confirm Password - Academ IX" />
+
+            <Link
+                href="/"
+                className="fixed top-6 left-6 z-50 flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all"
+            >
+                <Home className="w-5 h-5" />
+                <span className="font-medium">Home</span>
+            </Link>
+
+            <Link
+                href="/ContactPage"
+                className="fixed top-20 left-6 z-50 flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all"
+            >
+                <PhoneCall className="w-5 h-5" />
+                <span className="font-medium">Contact Us</span>
+            </Link>
+
+            <Link
+                href={route("login")}
+                className="fixed top-4 right-4 z-50 flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all"
+            >
+                <LogIn className="w-5 h-5" />
+                <span>Login</span>
+            </Link>
+
+            <AnimatePresence>
+                {notification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg text-white ${
+                            notification.type === "success"
+                                ? "bg-green-600"
+                                : "bg-red-600"
                         }`}
                     >
-                        Academ IX <span className="text-red-500">IX</span>
-                    </h1>
-                </div>
-                <p
-                    className={`text-xl text-center max-w-md ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                >
-                    Security is our priority. Please confirm your password to
-                    access this secure area.
-                </p>
-            </div>
+                        {notification.message}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-            {/* Right Side - Confirm Password Form */}
-            <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8">
-                <div
-                    className={`w-full max-w-md p-8 rounded-xl shadow-lg transition-colors duration-300 ${
-                        isDarkMode ? "bg-gray-800" : "bg-white"
-                    }`}
+            <div className="w-full flex flex-col justify-center items-center p-6">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="w-full max-w-md p-8 rounded-xl shadow-xl bg-gray-800/90 backdrop-blur-sm hover:shadow-green-500/30 transition-shadow"
                 >
-                    {/* Mobile Logo */}
-                    <div className="lg:hidden flex items-center justify-center mb-8">
-                        <BookA className="w-10 h-10 text-red-500 mr-3" />
-                        <h1
-                            className={`text-3xl font-bold ml-2 ${
-                                isDarkMode ? "text-white" : "text-gray-900"
-                            }`}
-                        >
-                            Academ <span className="text-red-500">IX</span>
-                        </h1>
+                    <div className="text-center space-y-6">
+                        <Lock className="w-16 h-16 text-green-500 mx-auto animate-pulse" />
+                        <h2 className="text-2xl font-bold text-white">
+                            Confirm Your Password
+                        </h2>
                     </div>
-
-                    <h2
-                        className={`text-2xl font-bold mb-4 ${
-                            isDarkMode ? "text-white" : "text-gray-900"
-                        }`}
-                    >
-                        Confirm Password
-                    </h2>
-
-                    <p
-                        className={`mb-6 text-sm ${
-                            isDarkMode ? "text-gray-300" : "text-gray-600"
-                        }`}
-                    >
-                        This is a secure area of the application. Please confirm
-                        your password before continuing.
+                    <p className="mt-4 mb-6 text-sm text-gray-300 text-center">
+                        This is a secure area. Please confirm your password to
+                        continue.
                     </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={submit} className="space-y-6">
                         <div>
-                            <label
-                                className={`block text-sm font-medium mb-2 ${
-                                    isDarkMode
-                                        ? "text-gray-300"
-                                        : "text-gray-700"
-                                }`}
-                            >
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
                                 Password
                             </label>
                             <div className="relative">
-                                <Lock
-                                    className={`absolute left-3 top-3 w-5 h-5 ${
-                                        isDarkMode
-                                            ? "text-gray-400"
-                                            : "text-gray-500"
-                                    }`}
-                                />
+                                <Lock className="absolute left-3 top-3 text-gray-400" />
                                 <input
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
+                                    type="password"
+                                    value={data.password}
                                     onChange={(e) =>
-                                        setPassword(e.target.value)
+                                        setData("password", e.target.value)
                                     }
-                                    className={`pl-10 w-full p-3 rounded-lg border transition-colors focus:ring-2 focus:ring-red-500 ${
-                                        isDarkMode
-                                            ? "bg-gray-700 border-gray-600 text-white"
-                                            : "bg-white border-gray-300 text-gray-900"
+                                    className={`pl-10 w-full py-3 rounded-lg border bg-gray-700 text-white border-gray-600 focus:ring-2 focus:ring-green-500 ${
+                                        errors.password ? "border-red-500" : ""
                                     }`}
-                                    placeholder="Enter your password"
-                                    required
+                                    placeholder="••••••••"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setShowPassword(!showPassword)
-                                    }
-                                    className="absolute right-3 top-3"
-                                >
-                                    {showPassword ? (
-                                        <EyeOff
-                                            className={`w-5 h-5 ${
-                                                isDarkMode
-                                                    ? "text-gray-400"
-                                                    : "text-gray-500"
-                                            }`}
-                                        />
-                                    ) : (
-                                        <Eye
-                                            className={`w-5 h-5 ${
-                                                isDarkMode
-                                                    ? "text-gray-400"
-                                                    : "text-gray-500"
-                                            }`}
-                                        />
-                                    )}
-                                </button>
                             </div>
+                            {errors.password && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.password}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className={`py-3 px-6 rounded-lg font-medium transition-all transform hover:scale-105 ${
-                                    isDarkMode
-                                        ? "bg-red-600 text-white hover:bg-red-700"
-                                        : "bg-red-500 text-white hover:bg-red-600"
-                                } ${
-                                    isSubmitting &&
-                                    "opacity-50 cursor-not-allowed"
-                                }`}
-                            >
-                                Confirm
-                            </button>
-                        </div>
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
+                        >
+                            {processing ? "Confirming..." : "Confirm"}
+                        </button>
                     </form>
-                </div>
+                </motion.div>
             </div>
         </div>
     );
