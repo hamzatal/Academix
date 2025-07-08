@@ -97,13 +97,13 @@ const LoginPage = () => {
                     <div className="flex items-center mb-8 animate-fade-in">
                         <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-4xl font-bold text-white">
-                            JO <span className="text-red-500">BEST</span>
+                            Academ <span className="text-red-500">IX</span>
                         </h1>
                     </div>
                     <p className="text-xl text-center max-w-md text-gray-300">
                         Discover the ultimate movie streaming experience. Watch
                         thousands of award-winning movies, TV shows, and more on
-                        JO BEST.
+                        Academix.
                     </p>
                 </div>
 
@@ -121,7 +121,7 @@ const LoginPage = () => {
                                     isDarkMode ? "text-white" : "text-gray-900"
                                 }`}
                             >
-                                JO <span className="text-red-500">BEST</span>
+                                Academ <span className="text-red-500">IX</span>
                             </h1>
                         </div>
 

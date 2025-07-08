@@ -157,22 +157,28 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                 fixed top-0 left-0 right-0 z-20
                 px-4 md:px-10 py-3
                 flex justify-between items-center
-                ${isDarkMode ? "bg-gray-900/30 text-white" : "bg-white/30 text-gray-900"}
+                ${
+                    isDarkMode
+                        ? "bg-gray-900/30 text-white"
+                        : "bg-white/30 text-gray-900"
+                }
                 backdrop-blur-xl border-b
                 ${isDarkMode ? "border-gray-800/50" : "border-gray-200/50"}
             `}
         >
             {/* Logo */}
             <div className="flex items-center space-x-4">
-                <motion.div 
+                <motion.div
                     whileHover={{ scale: 1.05 }}
                     className="flex items-center"
                 >
                     <Clapperboard className="w-7 h-7 text-red-500 mr-2" />
-                    <h1 className={`text-2xl font-bold tracking-tight ${
-                        isDarkMode ? "text-white" : "text-gray-900"
-                    }`}>
-                        JO <span className="text-red-500">BEST</span>
+                    <h1
+                        className={`text-2xl font-bold tracking-tight ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                    >
+                        Academ <span className="text-red-500">IX</span>
                     </h1>
                 </motion.div>
             </div>
@@ -181,7 +187,9 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
             <div className="hidden md:block w-96 max-w-md">
                 <LiveSearch
                     isDarkMode={isDarkMode}
-                    onSearchResults={(results) => console.log("Search results:", results)}
+                    onSearchResults={(results) =>
+                        console.log("Search results:", results)
+                    }
                 />
             </div>
 
@@ -200,9 +208,14 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                             transition-all
                             duration-300
                             group
-                            ${isActive(item.href) ? 
-                                (isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-black') :
-                                (isDarkMode ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-black')
+                            ${
+                                isActive(item.href)
+                                    ? isDarkMode
+                                        ? "bg-gray-800 text-white"
+                                        : "bg-gray-100 text-black"
+                                    : isDarkMode
+                                    ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                    : "text-gray-700 hover:bg-gray-100 hover:text-black"
                             }
                         `}
                     >
@@ -210,9 +223,14 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                             className={`w-5 h-5
                                 transition-transform
                                 group-hover:scale-110
-                                ${isActive(item.href) ? 
-                                    (isDarkMode ? 'text-white' : 'text-black') :
-                                    (isDarkMode ? 'text-gray-400' : 'text-gray-600')
+                                ${
+                                    isActive(item.href)
+                                        ? isDarkMode
+                                            ? "text-white"
+                                            : "text-black"
+                                        : isDarkMode
+                                        ? "text-gray-400"
+                                        : "text-gray-600"
                                 }
                             `}
                         />
@@ -249,10 +267,14 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                         className={`
                             lg:hidden
                             absolute top-full left-0 right-0
-                            ${isDarkMode ? 'bg-gray-900/95' : 'bg-white/95'}
+                            ${isDarkMode ? "bg-gray-900/95" : "bg-white/95"}
                             backdrop-blur-lg
                             border-b
-                            ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}
+                            ${
+                                isDarkMode
+                                    ? "border-gray-800"
+                                    : "border-gray-200"
+                            }
                             py-4
                         `}
                     >
@@ -260,7 +282,9 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                         <div className="px-4 mb-4">
                             <LiveSearch
                                 isDarkMode={isDarkMode}
-                                onSearchResults={(results) => console.log("Search results:", results)}
+                                onSearchResults={(results) =>
+                                    console.log("Search results:", results)
+                                }
                             />
                         </div>
 
@@ -277,9 +301,14 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                                         text-sm
                                         font-medium
                                         w-full
-                                        ${isActive(item.href) ? 
-                                            (isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-black') :
-                                            (isDarkMode ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-black')
+                                        ${
+                                            isActive(item.href)
+                                                ? isDarkMode
+                                                    ? "bg-gray-800 text-white"
+                                                    : "bg-gray-100 text-black"
+                                                : isDarkMode
+                                                ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                                : "text-gray-700 hover:bg-gray-100 hover:text-black"
                                         }
                                     `}
                                     onClick={() => setIsMobileMenuOpen(false)}
@@ -296,9 +325,13 @@ const Nav = ({ isDarkMode, wishlist, handleLogout, user }) => {
                                 <Link
                                     href="/wishlist"
                                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full ${
-                                        isActive("/wishlist") ? 
-                                            (isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-black') : 
-                                            (isDarkMode ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-black')
+                                        isActive("/wishlist")
+                                            ? isDarkMode
+                                                ? "bg-gray-800 text-white"
+                                                : "bg-gray-100 text-black"
+                                            : isDarkMode
+                                            ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                            : "text-gray-700 hover:bg-gray-100 hover:text-black"
                                     }`}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >

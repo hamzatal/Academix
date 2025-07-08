@@ -58,7 +58,7 @@ const ContactPage = () => {
                     <div className="flex items-center">
                         <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
-                            JO <span className="text-red-500">BEST</span>
+                            Academ <span className="text-red-500">IX</span>
                         </h1>
                     </div>
                     <Link
@@ -76,21 +76,26 @@ const ContactPage = () => {
                             Contact <span className="text-red-500">Us</span>
                         </h1>
                         <p className="text-xl mb-8 leading-relaxed">
-                            We value your feedback and are here to help! Whether you have questions, suggestions,
-                            or just want to share your thoughts about JO BEST, we'd love to hear from you.
-                            Our team is committed to providing you with the best possible movie streaming experience.
+                            We value your feedback and are here to help! Whether
+                            you have questions, suggestions, or just want to
+                            share your thoughts about AcademIX, we'd love to hear
+                            from you. Our team is committed to providing you
+                            with the best possible movie streaming experience.
                         </p>
                     </div>
 
                     <div className="w-full max-w-xl bg-gray-800 bg-opacity-70 rounded-xl p-8 shadow-2xl">
                         <h2 className="text-3xl font-bold mb-6 text-center">
-                            Send Us a <span className="text-red-500">Message</span>
+                            Send Us a{" "}
+                            <span className="text-red-500">Message</span>
                         </h2>
-                        
+
                         {status.message && (
                             <div
                                 className={`mb-4 p-4 rounded-lg ${
-                                    status.success ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+                                    status.success
+                                        ? "bg-green-600 text-white"
+                                        : "bg-red-600 text-white"
                                 }`}
                             >
                                 {status.message}
@@ -99,7 +104,10 @@ const ContactPage = () => {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label
+                                    htmlFor="name"
+                                    className="block text-sm font-medium text-gray-300 mb-2"
+                                >
                                     Name
                                 </label>
                                 <input
@@ -114,7 +122,10 @@ const ContactPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-300 mb-2"
+                                >
                                     Email
                                 </label>
                                 <input
@@ -129,7 +140,10 @@ const ContactPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label
+                                    htmlFor="subject"
+                                    className="block text-sm font-medium text-gray-300 mb-2"
+                                >
                                     Subject
                                 </label>
                                 <input
@@ -144,7 +158,10 @@ const ContactPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label
+                                    htmlFor="message"
+                                    className="block text-sm font-medium text-gray-300 mb-2"
+                                >
                                     Message
                                 </label>
                                 <textarea

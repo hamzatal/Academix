@@ -169,7 +169,7 @@ export default function Register() {
                                 isDarkMode ? "text-white" : "text-gray-900"
                             }`}
                         >
-                            JO <span className="text-red-500">BEST</span>
+                            Academ <span className="text-red-500">IX</span>
                         </h1>
                     </div>
                     <p
@@ -197,7 +197,7 @@ export default function Register() {
                                     isDarkMode ? "text-white" : "text-gray-900"
                                 }`}
                             >
-                                JO<span className="text-red-500">BEST</span>
+                                Academ <span className="text-red-500">IX</span>
                             </h1>
                         </div>
                         <h2

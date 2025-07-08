@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const LegalPopup = ({ type, isDarkMode, onClose }) => {
   const content = {
-    privacyPolicy: {
-      title: 'Privacy Policy',
-      text: `
-        At JO BEST, we are committed to protecting your privacy. Here's how we handle your personal information:
+      privacyPolicy: {
+          title: "Privacy Policy",
+          text: `
+        At Academix, we are committed to protecting your privacy. Here's how we handle your personal information:
 
         1. Information Collection
         We collect essential information directly provided by you during account creation, interactions, or services use.
@@ -29,12 +29,12 @@ const LegalPopup = ({ type, isDarkMode, onClose }) => {
         We use cookies and similar technologies to enhance user experience and analyze site traffic. You can manage cookie preferences in your browser settings.
 
         Last Updated: December 2024
-      `
-    },
-    termsOfService: {
-      title: 'Terms of Service',
-      text: `
-        Welcome to JO BEST. By using our services, you agree to the following terms:
+      `,
+      },
+      termsOfService: {
+          title: "Terms of Service",
+          text: `
+        Welcome to Academix. By using our services, you agree to the following terms:
 
         1. Acceptance of Terms
         By accessing or using our platform, you acknowledge and agree to be bound by these Terms of Service. If you do not agree, please do not use our services.
@@ -45,12 +45,12 @@ const LegalPopup = ({ type, isDarkMode, onClose }) => {
         • You must provide accurate and current information
 
         3. Intellectual Property
-        • All content on this platform is the property of Jo Best
+        • All content on this platform is the property of Academix
         • Content is protected by copyright and other intellectual property laws
         • You may not reproduce, distribute, or create derivative works without explicit permission
 
         4. Limitation of Liability
-        Jo Best is not liable for:
+        Academix is not liable for:
         • Direct or indirect damages
         • Loss of profits
         • Interruption of service
@@ -66,8 +66,8 @@ const LegalPopup = ({ type, isDarkMode, onClose }) => {
         These terms are governed by the laws of our jurisdiction.
 
         Last Updated: December 2024
-      `
-    }
+      `,
+      },
   };
 
   const { title, text } = content[type];
@@ -140,7 +140,7 @@ const Footer = ({ isDarkMode }) => {
             : 'bg-gray-100 text-gray-600'
         }`}
       >
-        <p>© 2024 JO BEST. All rights reserved.</p>
+        <p>© 2024 Academix. All rights reserved.</p>
         <div className="mt-4 space-x-4">
           <button 
             onClick={() => setActivePopup('privacyPolicy')} 

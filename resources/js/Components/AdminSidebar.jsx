@@ -47,7 +47,8 @@ export default function AdminSidebar() {
             <div className="flex flex-col h-full">
                 <div className="p-5 border-b border-gray-800">
                     <h2 className="text-1xl font-bold text-red-400">
-                        JO BEST <span className="text-gray-300">DASHBOARD</span>
+                        Academix{" "}
+                        <span className="text-gray-300">DASHBOARD</span>
                     </h2>
                 </div>
                 <div className="p-5 flex-grow overflow-auto custom-scrollbar">

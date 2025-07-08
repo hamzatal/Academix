@@ -35,7 +35,7 @@ const NotFoundPage = () => {
                     <div className="flex items-center">
                         <Clapperboard className="w-10 h-10 text-red-500 mr-3" />
                         <h1 className="text-3xl font-bold">
-                            JO <span className="text-red-500">BEST</span>
+                            Academ <span className="text-red-500">IX</span>
                         </h1>
                     </div>
                     <Link
@@ -48,7 +48,13 @@ const NotFoundPage = () => {
 
                 {/* 404 Content */}
                 <div className="container mx-auto px-1 py-1 flex flex-col items-center justify-center min-h-[40vh]">
-                    <div className={`text-center max-w-3xl mb-0 transition-all duration-700 transform ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                    <div
+                        className={`text-center max-w-3xl mb-0 transition-all duration-700 transform ${
+                            animationComplete
+                                ? "translate-y-0 opacity-100"
+                                : "translate-y-10 opacity-0"
+                        }`}
+                    >
                         {/* Animated Icon */}
                         <div className="inline-block mb-8 relative">
                             <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-20"></div>
@@ -56,18 +62,28 @@ const NotFoundPage = () => {
                                 <AlertCircle className="w-24 h-24 text-red-500 animate-pulse" />
                             </div>
                         </div>
-                        
+
                         <h1 className="text-8xl font-extrabold mb-6 leading-tight">
-                            4<span className="text-red-500 inline-block animate-bounce">0</span>4
+                            4
+                            <span className="text-red-500 inline-block animate-bounce">
+                                0
+                            </span>
+                            4
                         </h1>
-                        <h2 className="text-3xl font-bold mb-6">Page Not Found</h2>
-                      
+                        <h2 className="text-3xl font-bold mb-6">
+                            Page Not Found
+                        </h2>
                     </div>
 
-                    <div className={`w-full max-w-md mb-16 transition-all duration-700 delay-300 transform ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                    <div
+                        className={`w-full max-w-md mb-16 transition-all duration-700 delay-300 transform ${
+                            animationComplete
+                                ? "translate-y-0 opacity-100"
+                                : "translate-y-10 opacity-0"
+                        }`}
+                    >
                         {/* Film reel animation */}
-                       
-                        
+
                         {/* Action buttons */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link
